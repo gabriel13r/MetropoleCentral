@@ -1,8 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Open+Sans:wght@300;400;500;600;700&display=swap');
 
 :root {
   --background: 0 0% 100%;
@@ -14,47 +14,45 @@
   --border: 214.3 31.8% 91.4%;
   --input: 214.3 31.8% 91.4%;
   
-  /* Custom brand colors */
-  --primary: 353 84% 57%; /* #e63946 */
-  --primary-foreground: 210 40% 98%;
-  --secondary: 201 51% 45%; /* #457b9d */
-  --secondary-foreground: 222.2 47.4% 11.2%;
-  --accent: 187 50% 76%; /* #a8dadc */
+  /* Custom brand colors for GTA RP theme */
+  --primary: 264 79% 52%; /* #7533e6 - purple */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 208 100% 47%; /* #007bff - blue */
+  --secondary-foreground: 0 0% 100%;
+  --accent: 152 76% 61%; /* #45e6b0 - turquoise */
   --accent-foreground: 222.2 47.4% 11.2%;
   --destructive: 0 100% 50%;
   --destructive-foreground: 210 40% 98%;
-  --light: 94 48% 95%; /* #f1faee */
-  --dark: 215 50% 23%; /* #1d3557 */
+  --background-dark: 240 13% 8%; /* #12121a - dark background */
+  --card-dark: 240 17% 14%; /* #1e1e2e - card background */
   
   --ring: 215 20.2% 65.1%;
   --radius: 0.5rem;
 }
 
 .dark {
-  --background: 224 71% 4%;
-  --foreground: 213 31% 91%;
-  --muted: 223 47% 11%;
-  --muted-foreground: 215.4 16.3% 56.9%;
-  --accent: 216 34% 17%;
-  --accent-foreground: 210 40% 98%;
-  --popover: 224 71% 4%;
-  --popover-foreground: 215 20.2% 65.1%;
-  --border: 216 34% 17%;
-  --input: 216 34% 17%;
+  /* Dark mode is the primary UI for GTA RP site */
+  --background: 240 13% 8%; /* #12121a */
+  --foreground: 0 0% 100%;
+  --muted: 240 13% 13%;
+  --muted-foreground: 0 0% 70%;
+  --popover: 240 13% 8%;
+  --popover-foreground: 0 0% 100%;
+  --border: 240 13% 20%;
+  --input: 240 13% 20%;
   
-  /* Custom brand colors (preserved in dark mode) */
-  --primary: 353 84% 57%; /* #e63946 */
-  --primary-foreground: 210 40% 98%;
-  --secondary: 201 51% 45%; /* #457b9d */
-  --secondary-foreground: 210 40% 98%;
-  --accent: 187 50% 76%; /* #a8dadc */
-  --accent-foreground: 222.2 47.4% 11.2%;
+  /* Keep brand colors consistent in dark mode */
+  --primary: 264 79% 52%; /* #7533e6 - purple */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 208 100% 47%; /* #007bff - blue */
+  --secondary-foreground: 0 0% 100%;
+  --accent: 152 76% 61%; /* #45e6b0 - turquoise */
+  --accent-foreground: 0 0% 0%;
   --destructive: 0 63% 31%;
-  --destructive-foreground: 210 40% 98%;
-  --light: 94 48% 95%; /* #f1faee */
-  --dark: 215 50% 23%; /* #1d3557 */
+  --destructive-foreground: 0 0% 100%;
+  --card-dark: 240 17% 14%; /* #1e1e2e */
   
-  --ring: 216 34% 17%;
+  --ring: 264 79% 52%;
   --radius: 0.5rem;
 }
 
@@ -65,16 +63,25 @@
   
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Poppins', sans-serif;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Poppins', sans-serif;
+    @apply font-bold;
   }
 }
 
 @layer utilities {
-  .font-playfair {
-    font-family: 'Playfair Display', serif;
+  .bg-gradient-game {
+    @apply bg-gradient-to-r from-primary to-secondary;
+  }
+  
+  .text-gradient-game {
+    @apply bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent;
+  }
+  
+  .bg-card-dark {
+    background-color: hsl(var(--card-dark));
   }
 }
