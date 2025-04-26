@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Open+Sans:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222 47% 11%;
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 47.4% 11.2%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  
+  /* Custom brand colors */
+  --primary: 353 84% 57%; /* #e63946 */
+  --primary-foreground: 210 40% 98%;
+  --secondary: 201 51% 45%; /* #457b9d */
+  --secondary-foreground: 222.2 47.4% 11.2%;
+  --accent: 187 50% 76%; /* #a8dadc */
+  --accent-foreground: 222.2 47.4% 11.2%;
+  --destructive: 0 100% 50%;
+  --destructive-foreground: 210 40% 98%;
+  --light: 94 48% 95%; /* #f1faee */
+  --dark: 215 50% 23%; /* #1d3557 */
+  
+  --ring: 215 20.2% 65.1%;
+  --radius: 0.5rem;
+}
+
+.dark {
+  --background: 224 71% 4%;
+  --foreground: 213 31% 91%;
+  --muted: 223 47% 11%;
+  --muted-foreground: 215.4 16.3% 56.9%;
+  --accent: 216 34% 17%;
+  --accent-foreground: 210 40% 98%;
+  --popover: 224 71% 4%;
+  --popover-foreground: 215 20.2% 65.1%;
+  --border: 216 34% 17%;
+  --input: 216 34% 17%;
+  
+  /* Custom brand colors (preserved in dark mode) */
+  --primary: 353 84% 57%; /* #e63946 */
+  --primary-foreground: 210 40% 98%;
+  --secondary: 201 51% 45%; /* #457b9d */
+  --secondary-foreground: 210 40% 98%;
+  --accent: 187 50% 76%; /* #a8dadc */
+  --accent-foreground: 222.2 47.4% 11.2%;
+  --destructive: 0 63% 31%;
+  --destructive-foreground: 210 40% 98%;
+  --light: 94 48% 95%; /* #f1faee */
+  --dark: 215 50% 23%; /* #1d3557 */
+  
+  --ring: 216 34% 17%;
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Open Sans', sans-serif;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
+  }
+}
+
+@layer utilities {
+  .font-playfair {
+    font-family: 'Playfair Display', serif;
+  }
+}
