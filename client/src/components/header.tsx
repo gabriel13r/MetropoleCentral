@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Search } from "lucide-react";
+import { LogIn, Menu, X, Users, Gamepad2, Book, Award, HelpCircle, Download } from "lucide-react";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -14,81 +14,121 @@ const Header = () => {
     setIsMenuOpen(false);
   };
 
+  const handleSteamLogin = () => {
+    // Implementação futura da autenticação com Steam
+    console.log("Steam login clicked");
+  };
+
   return (
-    <header className="bg-white shadow-md sticky top-0 z-50">
+    <header className="bg-card-dark text-white sticky top-0 z-50 border-b border-gray-800">
       <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center py-4">
+        <div className="flex justify-between items-center py-3">
           {/* Logo */}
           <div className="flex items-center">
-            <Link href="/" className="font-playfair font-bold text-3xl text-[#1d3557]">
-              Metropole
+            <Link href="/" className="font-bold text-3xl text-gradient-game">
+              METROPOLE
             </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            <Link href="/" className="text-[#1d3557] hover:text-[#e63946] transition duration-200 font-medium">
-              Início
+          <nav className="hidden lg:flex items-center space-x-6">
+            <Link href="/" className="text-white hover:text-primary transition duration-200 font-medium flex items-center gap-1">
+              <Gamepad2 size={18} />
+              <span>Servidor</span>
             </Link>
-            <Link href="#" className="text-[#1d3557] hover:text-[#e63946] transition duration-200 font-medium">
-              Política
+            <Link href="/characters" className="text-white hover:text-primary transition duration-200 font-medium flex items-center gap-1">
+              <Users size={18} />
+              <span>Personagens</span>
             </Link>
-            <Link href="#" className="text-[#1d3557] hover:text-[#e63946] transition duration-200 font-medium">
-              Economia
+            <Link href="/rules" className="text-white hover:text-primary transition duration-200 font-medium flex items-center gap-1">
+              <Book size={18} />
+              <span>Regras</span>
             </Link>
-            <Link href="#" className="text-[#1d3557] hover:text-[#e63946] transition duration-200 font-medium">
-              Cultura
+            <Link href="/whitelist" className="text-white hover:text-primary transition duration-200 font-medium flex items-center gap-1">
+              <Award size={18} />
+              <span>Whitelist</span>
             </Link>
-            <Link href="#" className="text-[#1d3557] hover:text-[#e63946] transition duration-200 font-medium">
-              Opinião
+            <Link href="/support" className="text-white hover:text-primary transition duration-200 font-medium flex items-center gap-1">
+              <HelpCircle size={18} />
+              <span>Suporte</span>
             </Link>
           </nav>
 
           {/* Mobile menu button */}
-          <div className="md:hidden flex items-center">
+          <div className="lg:hidden flex items-center">
             <button 
               onClick={toggleMenu}
-              className="text-[#1d3557] hover:text-[#e63946] focus:outline-none"
+              className="text-white hover:text-primary focus:outline-none"
+              aria-label={isMenuOpen ? "Fechar menu" : "Abrir menu"}
             >
-              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
+              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
           </div>
 
-          {/* Search and login buttons (desktop) */}
-          <div className="hidden md:flex items-center space-x-4">
-            <button className="text-[#1d3557] hover:text-[#e63946] transition">
-              <Search className="h-5 w-5" />
-            </button>
-            <Button variant="default">Assine</Button>
+          {/* Login/Download buttons (desktop) */}
+          <div className="hidden lg:flex items-center space-x-4">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="border-primary text-white hover:bg-primary hover:text-white"
+              onClick={handleSteamLogin}
+            >
+              <LogIn className="h-4 w-4 mr-1" />
+              Entrar com Steam
+            </Button>
+            <Button 
+              variant="default" 
+              size="sm" 
+              className="bg-gradient-game hover:opacity-90"
+            >
+              <Download className="h-4 w-4 mr-1" />
+              Baixar Launcher
+            </Button>
           </div>
         </div>
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden pb-4">
-            <div className="flex flex-col space-y-3">
-              <Link href="/" onClick={closeMenu} className="text-[#1d3557] hover:text-[#e63946] transition duration-200 font-medium">
-                Início
+          <div className="lg:hidden pb-4 pt-2 border-t border-gray-800">
+            <div className="flex flex-col space-y-4">
+              <Link href="/" onClick={closeMenu} className="text-white hover:text-primary transition duration-200 font-medium flex items-center gap-2">
+                <Gamepad2 size={18} />
+                <span>Servidor</span>
               </Link>
-              <Link href="#" onClick={closeMenu} className="text-[#1d3557] hover:text-[#e63946] transition duration-200 font-medium">
-                Política
+              <Link href="/characters" onClick={closeMenu} className="text-white hover:text-primary transition duration-200 font-medium flex items-center gap-2">
+                <Users size={18} />
+                <span>Personagens</span>
               </Link>
-              <Link href="#" onClick={closeMenu} className="text-[#1d3557] hover:text-[#e63946] transition duration-200 font-medium">
-                Economia
+              <Link href="/rules" onClick={closeMenu} className="text-white hover:text-primary transition duration-200 font-medium flex items-center gap-2">
+                <Book size={18} />
+                <span>Regras</span>
               </Link>
-              <Link href="#" onClick={closeMenu} className="text-[#1d3557] hover:text-[#e63946] transition duration-200 font-medium">
-                Cultura
+              <Link href="/whitelist" onClick={closeMenu} className="text-white hover:text-primary transition duration-200 font-medium flex items-center gap-2">
+                <Award size={18} />
+                <span>Whitelist</span>
               </Link>
-              <Link href="#" onClick={closeMenu} className="text-[#1d3557] hover:text-[#e63946] transition duration-200 font-medium">
-                Opinião
+              <Link href="/support" onClick={closeMenu} className="text-white hover:text-primary transition duration-200 font-medium flex items-center gap-2">
+                <HelpCircle size={18} />
+                <span>Suporte</span>
               </Link>
-              <div className="pt-2 flex items-center justify-between">
-                <button className="text-[#1d3557] hover:text-[#e63946] transition">
-                  <Search className="h-5 w-5" />
-                </button>
-                <Button variant="default">Assine</Button>
+              <div className="pt-3 flex flex-col space-y-3 border-t border-gray-800">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="border-primary text-white hover:bg-primary hover:text-white"
+                  onClick={handleSteamLogin}
+                >
+                  <LogIn className="h-4 w-4 mr-1" />
+                  Entrar com Steam
+                </Button>
+                <Button 
+                  variant="default" 
+                  size="sm" 
+                  className="bg-gradient-game hover:opacity-90"
+                >
+                  <Download className="h-4 w-4 mr-1" />
+                  Baixar Launcher
+                </Button>
               </div>
             </div>
           </div>
