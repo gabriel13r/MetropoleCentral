@@ -62,9 +62,14 @@ export function setupAuth(app: Express) {
     }
   });
 
+  if (!process.env.DISCORD_CLIENT_ID || !process.env.DISCORD_CLIENT_SECRET) {
+    console.warn("⚠️ Discord credentials não configuradas!");
+    return;
+  }
+
   passport.use(new DiscordStrategy({
-    clientID: process.env.DISCORD_CLIENT_ID!,
-    clientSecret: process.env.DISCORD_CLIENT_SECRET!,
+    clientID: process.env.DISCORD_CLIENT_ID,
+    clientSecret: process.env.DISCORD_CLIENT_SECRET,
     callbackURL: `${BASE_URL}/api/auth/discord/callback`,
     scope: ['identify', 'email']
   }, async (accessToken: string, refreshToken: string, profile: any, done: any) => {
