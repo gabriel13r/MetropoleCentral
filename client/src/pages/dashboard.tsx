@@ -22,14 +22,25 @@ function Dashboard() {
   const { user, logoutMutation } = useAuth();
   const [, setLocation] = useLocation();
 
-  // Redirecionar para autenticação se não estiver logado
-  useEffect(() => {
-    if (!user) {
-      setLocation("/auth");
-    }
-  }, [user, setLocation]);
+  // Dados de teste para depuração
+  const debugUser = {
+    id: 1,
+    username: "UsuarioTeste",
+    displayName: "Usuário de Teste",
+    avatar: "https://avatars.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg",
+    diamonds: 500,
+    role: "player",
+    isVip: false,
+    steamId: "76561198081489182",
+    hexId: "123456789"
+  };
 
-  // Se não houver usuário, mostre mensagem de carregamento
+  // Usuário para renderização: o real quando autenticado ou o fake para depuração
+  const userToRender = user || debugUser;
+
+  // Sempre vamos renderizar o dashboard com userToRender
+  // Comentando a verificação para depuração
+  /*
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 to-black">
@@ -38,6 +49,7 @@ function Dashboard() {
       </div>
     );
   }
+  */
 
   // Função para lidar com o logout
   const handleLogout = () => {
@@ -105,12 +117,12 @@ function Dashboard() {
         <div className="p-4 border-t border-gray-800">
           <div className="flex items-center mb-4">
             <Avatar className="h-10 w-10 mr-3">
-              <AvatarImage src={user.avatar} alt={user.displayName || user.username} />
-              <AvatarFallback>{(user.displayName || user.username)?.charAt(0)}</AvatarFallback>
+              <AvatarImage src={userToRender.avatar} alt={userToRender.displayName || userToRender.username} />
+              <AvatarFallback>{(userToRender.displayName || userToRender.username)?.charAt(0)}</AvatarFallback>
             </Avatar>
             <div>
-              <p className="text-sm font-medium">{user.displayName || user.username}</p>
-              <p className="text-xs text-gray-500">ID: {user.hexId || 'N/A'}</p>
+              <p className="text-sm font-medium">{userToRender.displayName || userToRender.username}</p>
+              <p className="text-xs text-gray-500">ID: {userToRender.hexId || 'N/A'}</p>
             </div>
           </div>
           <Button 

@@ -20,10 +20,8 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/auth" component={AuthPage} />
       
-      {/* Rotas protegidas */}
-      <Route path="/dashboard">
-        {() => <ProtectedRoute path="/dashboard" component={Dashboard} />}
-      </Route>
+      {/* Temporariamente não protegida para depuração */}
+      <Route path="/dashboard" component={Dashboard} />
       
       {/* Placeholder para todas as outras rotas */}
       <Route component={NotFound} />
