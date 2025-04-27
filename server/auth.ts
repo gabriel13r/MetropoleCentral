@@ -1,3 +1,4 @@
+
 import session from "express-session";
 import { Express, Request, Response, NextFunction } from "express";
 import crypto from "crypto";
@@ -23,13 +24,7 @@ declare module "express-session" {
 
 const BASE_URL = process.env.REPLIT_SLUG 
   ? `https://${process.env.REPLIT_SLUG}.${process.env.REPLIT_OWNER}.repl.co`
-  : process.env.PORT 
-    ? `http://0.0.0.0:${process.env.PORT}` 
-    : "http://0.0.0.0:5000";
-
-const CALLBACK_URL = process.env.NODE_ENV === "production"
-  ? "https://fishgg.com/api/auth/discord/callback"
-  : `${BASE_URL}/api/auth/discord/callback`;
+  : "http://0.0.0.0:5000";
 
 export function setupAuth(app: Express) {
   if (!process.env.SESSION_SECRET) {
@@ -70,7 +65,7 @@ export function setupAuth(app: Express) {
   passport.use(new DiscordStrategy({
     clientID: process.env.DISCORD_CLIENT_ID!,
     clientSecret: process.env.DISCORD_CLIENT_SECRET!,
-    callbackURL: CALLBACK_URL,
+    callbackURL: `${BASE_URL}/api/auth/discord/callback`,
     scope: ['identify', 'email']
   }, async (accessToken: string, refreshToken: string, profile: any, done: any) => {
     try {
@@ -83,11 +78,6 @@ export function setupAuth(app: Express) {
           displayName: profile.username,
           avatar: `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png`
         });
-      } else {
-        user = await storage.updateUser(user.id, {
-          displayName: profile.username,
-          avatar: `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png`
-        }) as UserType;
       }
 
       return done(null, user);
