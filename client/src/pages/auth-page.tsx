@@ -49,8 +49,11 @@ function AuthPage() {
           <h1 className="text-3xl md:text-4xl font-bold mb-6 text-center">
             Entre no servidor <span className="text-blue-500">FishGG</span>
           </h1>
-          <p className="text-gray-400 mb-10 text-center max-w-md">
+          <p className="text-gray-300 mb-4 text-center max-w-md">
             Faça login com sua conta Steam para acessar nosso servidor, gerenciar seus personagens e participar de nossa comunidade.
+          </p>
+          <p className="text-blue-400 text-sm mb-10 text-center">
+            Utilizamos autenticação oficial Steam - você será redirecionado para o login seguro.
           </p>
           
           <div className="flex flex-col items-center w-full space-y-6">

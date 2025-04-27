@@ -10,13 +10,12 @@ interface SteamLoginButtonProps {
 export function SteamLoginButton({ className, variant = "default" }: SteamLoginButtonProps) {
   return (
     <Button
-      className={`bg-[#1b2838] hover:bg-[#2a475e] border-0 flex items-center justify-center gap-2 transition-all ${
-        variant === "large" ? "py-6 px-8 text-lg" : "py-2 px-4"
+      className={`bg-[#1b2838] hover:bg-[#2a475e] border-2 border-[#66c0f4] flex items-center justify-center gap-3 transition-all shadow-lg shadow-[#66c0f4]/20 ${
+        variant === "large" ? "py-7 px-10 text-xl font-semibold" : "py-3 px-5 text-lg font-medium"
       } ${className}`}
       onClick={() => {
-        // Configurações flexíveis para desenvolvimento local e Replit
-        const port = import.meta.env.VITE_API_PORT || '5000';
-        window.location.href = `http://localhost:${port}/api/auth/steam`;
+        // Usar URL relativa para funcionar em qualquer ambiente
+        window.location.href = `/api/auth/steam`;
       }}
     >
       <SiSteam className={variant === "large" ? "h-6 w-6" : "h-5 w-5"} />
