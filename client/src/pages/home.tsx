@@ -1,7 +1,8 @@
 import Header from "@/components/header";
 import HeroSection from "@/components/hero";
 import Footer from "@/components/footer";
-import ServerStats from "@/components/newsletter"; // Renamed newsletter to ServerStats
+import ServerStats from "@/components/server-stats";
+import { Newsletter } from "@/components/newsletter";
 import { Gamepad2, ShieldCheck, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
 

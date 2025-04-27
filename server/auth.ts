@@ -85,10 +85,7 @@ export function setupAuth(app: Express) {
           username: profile.displayName,
           steamId: steamId,
           displayName: profile.displayName,
-          avatar: profile._json.avatarfull,
-          diamonds: 0,
-          role: "user",
-          isVip: false
+          avatar: profile._json.avatarfull
         });
       } else {
         // Atualizar informações do usuário existente

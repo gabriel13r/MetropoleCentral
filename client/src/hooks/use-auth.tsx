@@ -14,6 +14,14 @@ type User = {
   diamonds: number;
   role: string;
   isVip: boolean;
+  steamId?: string;
+  hexId?: string;
+  discordId?: string;
+  avatar?: string;
+  email?: string;
+  vipExpiry?: Date;
+  joinedAt?: Date;
+  lastLogin?: Date;
 };
 
 type AuthContextType = {

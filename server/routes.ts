@@ -2,16 +2,22 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import Stripe from "stripe";
 import { storage } from "./storage";
+import { setupAuth } from "./auth";
 
+// Verificar a chave de API da Stripe
 if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
+  console.warn('Missing required Stripe secret: STRIPE_SECRET_KEY');
 }
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: "2023-10-16",
-});
+
+const stripe = process.env.STRIPE_SECRET_KEY 
+  ? new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: "2023-10-16" })
+  : undefined;
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // ============== Auth Routes ==============
+  // Configuração de autenticação via Steam
+  setupAuth(app);
+  
+  // ============== Auth Routes (Legacy) ==============
   app.post("/api/register", async (req, res) => {
     try {
       const { username, password, steamId, hexId, discordId, displayName } = req.body;

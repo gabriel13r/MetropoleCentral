@@ -6,7 +6,7 @@ import { z } from "zod";
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
-  password: text("password").notNull(),
+  password: text("password"),  // Permitir nulo para autenticação OAuth
   displayName: text("display_name"),
   email: text("email"),
   steamId: text("steam_id"),
@@ -20,19 +20,18 @@ export const users = pgTable("users", {
   stripeSubscriptionId: text("stripe_subscription_id"),
   joinedAt: timestamp("joined_at").notNull().defaultNow(),
   lastLogin: timestamp("last_login"),
-  role: text("role").default("player"), // player, admin, moderator
+  role: text("role").default("user"), // user, admin, moderator
 });
 
-export const insertUserSchema = createInsertSchema(users).pick({
-  username: true,
-  password: true,
-  displayName: true,
-  email: true,
-  steamId: true,
-  discordId: true,
-  hexId: true,
-  avatar: true,
-});
+// Schema para inserção padrão (com senha)
+export const insertUserSchema = createInsertSchema(users)
+  .extend({
+    // Fazer password opcional, para permitir autenticação via Steam/OAuth
+    password: z.string().min(6).optional(),
+    diamonds: z.number().optional(),
+    isVip: z.boolean().optional(),
+    role: z.string().optional(),
+  });
 
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;

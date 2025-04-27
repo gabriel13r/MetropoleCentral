@@ -1,51 +1,12 @@
-import { useState, useEffect } from "react";
-import { useLocation, useRoute, Link } from "wouter";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import React, { useEffect } from "react";
+import { useLocation, Link } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
-  Gamepad2, 
-  Lock, 
-  User, 
-  AtSign, 
-  MessageCircle,
-  ExternalLink 
-} from "lucide-react";
-import { SiSteam } from "react-icons/si";
-
-// Esquema de validação para login
-const loginSchema = z.object({
-  username: z.string().min(3, "Usuário deve ter pelo menos 3 caracteres"),
-  password: z.string().min(6, "Senha deve ter pelo menos 6 caracteres"),
-});
-
-// Esquema de validação para registro
-const registerSchema = z.object({
-  username: z.string().min(3, "Usuário deve ter pelo menos 3 caracteres"),
-  password: z.string().min(6, "Senha deve ter pelo menos 6 caracteres"),
-  displayName: z.string().min(3, "Nome de exibição deve ter pelo menos 3 caracteres").optional(),
-  steamId: z.string().optional(),
-  hexId: z.string().optional(),
-  discordId: z.string().optional(),
-});
+import { SteamLoginButton } from "@/components/steam-login-button";
+import { Gamepad2, Shield, Users, Clock } from "lucide-react";
 
 function AuthPage() {
-  const [activeTab, setActiveTab] = useState<string>("login");
-  const [location, setLocation] = useLocation();
-  const [, params] = useRoute("/auth?:tab");
-  const { user, loginMutation, registerMutation } = useAuth();
+  const { user } = useAuth();
+  const [, setLocation] = useLocation();
 
   // Redireciona para dashboard se já estiver autenticado
   useEffect(() => {
@@ -54,359 +15,98 @@ function AuthPage() {
     }
   }, [user, setLocation]);
 
-  // Define o tab ativo com base nos parâmetros da URL
-  useEffect(() => {
-    if (params && params.tab === "register") {
-      setActiveTab("register");
-    }
-  }, [params]);
-
-  // Form para login
-  const loginForm = useForm<z.infer<typeof loginSchema>>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      username: "",
-      password: "",
-    },
-  });
-
-  // Form para registro
-  const registerForm = useForm<z.infer<typeof registerSchema>>({
-    resolver: zodResolver(registerSchema),
-    defaultValues: {
-      username: "",
-      password: "",
-      displayName: "",
-      steamId: "",
-      hexId: "",
-      discordId: "",
-    },
-  });
-
-  // Função para submeter o login
-  const onLoginSubmit = (values: z.infer<typeof loginSchema>) => {
-    loginMutation.mutate(values);
-  };
-
-  // Função para submeter o registro
-  const onRegisterSubmit = (values: z.infer<typeof registerSchema>) => {
-    registerMutation.mutate(values);
-  };
-
-  // UI para página de autenticação
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-background-dark">
-      {/* Seção principal (formulários) */}
-      <div className="w-full md:w-1/2 p-6 md:p-12 flex flex-col justify-center">
-        <div className="mb-8 text-center md:text-left">
+    <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-900 to-black text-white">
+      {/* Header */}
+      <header className="w-full border-b border-gray-800 py-4">
+        <div className="container mx-auto px-4 flex justify-between items-center">
           <Link href="/">
-            <span className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-pink-500">
+            <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600">
               FISH<span className="text-white">GG</span>
             </span>
           </Link>
-          <h1 className="text-2xl md:text-3xl font-bold text-white mt-6">
-            {activeTab === "login" ? "Bem-vindo de volta!" : "Crie sua conta"}
-          </h1>
-          <p className="text-gray-400 mt-2">
-            {activeTab === "login" 
-              ? "Faça login para acessar seu painel e recursos exclusivos" 
-              : "Registre-se para participar do melhor servidor de roleplay"}
-          </p>
+          <nav className="hidden md:flex space-x-6">
+            <Link href="/" className="hover:text-blue-500 transition-colors">
+              Início
+            </Link>
+            <Link href="/noticias" className="hover:text-blue-500 transition-colors">
+              Notícias
+            </Link>
+            <Link href="/loja" className="hover:text-blue-500 transition-colors">
+              Loja
+            </Link>
+            <Link href="/suporte" className="hover:text-blue-500 transition-colors">
+              Suporte
+            </Link>
+          </nav>
         </div>
+      </header>
 
-        <Tabs 
-          defaultValue="login" 
-          value={activeTab} 
-          onValueChange={setActiveTab}
-          className="w-full max-w-md mx-auto md:mx-0"
-        >
-          <TabsList className="grid grid-cols-2 mb-8">
-            <TabsTrigger value="login">Login</TabsTrigger>
-            <TabsTrigger value="register">Registrar</TabsTrigger>
-          </TabsList>
-
-          {/* Formulário de Login */}
-          <TabsContent value="login">
-            <Form {...loginForm}>
-              <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-6">
-                <FormField
-                  control={loginForm.control}
-                  name="username"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Usuário</FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <User className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
-                          <Input 
-                            placeholder="Seu nome de usuário" 
-                            className="pl-10 bg-black/50 border-gray-700"
-                            {...field} 
-                          />
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={loginForm.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Senha</FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <Lock className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
-                          <Input 
-                            type="password" 
-                            placeholder="Sua senha" 
-                            className="pl-10 bg-black/50 border-gray-700"
-                            {...field} 
-                          />
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <div className="text-right">
-                  <Link href="/recuperar-senha" className="text-sm text-primary hover:underline">
-                    Esqueceu sua senha?
-                  </Link>
-                </div>
-                <Button 
-                  type="submit" 
-                  className="w-full bg-gradient-game" 
-                  size="lg"
-                  disabled={loginMutation.isPending}
-                >
-                  {loginMutation.isPending ? "Entrando..." : "Entrar"}
-                </Button>
-              </form>
-            </Form>
-          </TabsContent>
-
-          {/* Formulário de Registro */}
-          <TabsContent value="register">
-            <Form {...registerForm}>
-              <form onSubmit={registerForm.handleSubmit(onRegisterSubmit)} className="space-y-6">
-                <FormField
-                  control={registerForm.control}
-                  name="username"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Usuário</FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <User className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
-                          <Input 
-                            placeholder="Crie um nome de usuário" 
-                            className="pl-10 bg-black/50 border-gray-700"
-                            {...field} 
-                          />
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={registerForm.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Senha</FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <Lock className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
-                          <Input 
-                            type="password" 
-                            placeholder="Crie uma senha forte" 
-                            className="pl-10 bg-black/50 border-gray-700"
-                            {...field} 
-                          />
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={registerForm.control}
-                  name="displayName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Nome de Exibição (opcional)</FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <AtSign className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
-                          <Input 
-                            placeholder="Como você quer ser chamado" 
-                            className="pl-10 bg-black/50 border-gray-700"
-                            {...field} 
-                          />
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <FormField
-                    control={registerForm.control}
-                    name="steamId"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>
-                          <span className="flex items-center gap-1">
-                            Steam ID <span className="text-xs text-gray-500">(opcional)</span>
-                          </span>
-                        </FormLabel>
-                        <FormControl>
-                          <div className="relative">
-                            <SiSteam className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
-                            <Input 
-                              placeholder="Seu Steam ID" 
-                              className="pl-10 bg-black/50 border-gray-700"
-                              {...field} 
-                            />
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={registerForm.control}
-                    name="hexId"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>
-                          <span className="flex items-center gap-1">
-                            HEX ID <span className="text-xs text-gray-500">(opcional)</span>
-                          </span>
-                        </FormLabel>
-                        <FormControl>
-                          <div className="relative">
-                            <Gamepad2 className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
-                            <Input 
-                              placeholder="Seu HEX ID" 
-                              className="pl-10 bg-black/50 border-gray-700"
-                              {...field} 
-                            />
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <FormField
-                  control={registerForm.control}
-                  name="discordId"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        <span className="flex items-center gap-1">
-                          Discord ID <span className="text-xs text-gray-500">(opcional)</span>
-                        </span>
-                      </FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <MessageCircle className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
-                          <Input 
-                            placeholder="Seu Discord ID" 
-                            className="pl-10 bg-black/50 border-gray-700"
-                            {...field} 
-                          />
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <div className="text-xs text-gray-400">
-                  Ao registrar-se, você concorda com nossos {" "}
-                  <Link href="/termos" className="text-primary hover:underline">
-                    Termos de Serviço
-                  </Link>{" "}
-                  e{" "}
-                  <Link href="/privacidade" className="text-primary hover:underline">
-                    Política de Privacidade
-                  </Link>
-                </div>
-
-                <Button 
-                  type="submit" 
-                  className="w-full bg-gradient-game" 
-                  size="lg"
-                  disabled={registerMutation.isPending}
-                >
-                  {registerMutation.isPending ? "Registrando..." : "Criar Conta"}
-                </Button>
-              </form>
-            </Form>
-          </TabsContent>
-        </Tabs>
-      </div>
-
-      {/* Hero section (lado direito) */}
-      <div className="w-full md:w-1/2 bg-gradient-to-br from-black to-background-dark p-6 md:p-12 flex items-center">
-        <div className="max-w-lg mx-auto md:mx-0">
-          <div className="mb-8">
-            <div className="inline-flex items-center justify-center p-3 bg-primary/10 rounded-lg mb-4">
-              <Gamepad2 className="h-8 w-8 text-primary" />
+      {/* Main Content */}
+      <main className="flex-grow container mx-auto px-4 py-10 md:py-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+          {/* Left Column - Auth */}
+          <div className="flex flex-col items-center md:items-start">
+            <h1 className="text-3xl md:text-4xl font-bold mb-6 text-center md:text-left">
+              Entre no servidor <span className="text-blue-500">FishGG</span>
+            </h1>
+            <p className="text-gray-400 mb-10 text-center md:text-left max-w-md">
+              Faça login com sua conta Steam para acessar nosso servidor, gerenciar seus personagens e participar de nossa comunidade.
+            </p>
+            
+            <div className="flex flex-col items-center w-full md:items-start space-y-6">
+              <SteamLoginButton variant="large" className="w-full md:w-auto" />
+              
+              <div className="text-sm text-gray-500 max-w-md text-center md:text-left">
+                Ao continuar, você concorda com nossos {" "}
+                <Link href="/termos" className="text-blue-500 hover:underline">
+                  Termos de Serviço
+                </Link>{" "}
+                e{" "}
+                <Link href="/privacidade" className="text-blue-500 hover:underline">
+                  Política de Privacidade
+                </Link>
+              </div>
             </div>
-            <h2 className="text-3xl font-bold text-white mb-4">A melhor experiência de RolePlay</h2>
-            <p className="text-gray-300">
-              Acesse seu painel personalizado e gerencie todos os seus personagens, 
-              faça whitelist, compre diamantes e muito mais!
+          </div>
+
+          {/* Right Column - Info */}
+          <div className="bg-gray-900/50 rounded-lg p-8 border border-gray-800">
+            <h2 className="text-2xl font-bold mb-6 text-center">Estatísticas do Servidor</h2>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+              <div className="bg-gray-800/50 p-4 rounded-lg text-center">
+                <Users className="w-8 h-8 text-purple-500 mx-auto mb-2" />
+                <div className="text-2xl font-bold">40.000+</div>
+                <div className="text-gray-400 text-sm">Usuários registrados</div>
+              </div>
+              
+              <div className="bg-gray-800/50 p-4 rounded-lg text-center">
+                <Shield className="w-8 h-8 text-blue-500 mx-auto mb-2" />
+                <div className="text-2xl font-bold">500+</div>
+                <div className="text-gray-400 text-sm">Jogadores online</div>
+              </div>
+              
+              <div className="bg-gray-800/50 p-4 rounded-lg text-center">
+                <Clock className="w-8 h-8 text-green-500 mx-auto mb-2" />
+                <div className="text-2xl font-bold">24/7</div>
+                <div className="text-gray-400 text-sm">Servidor online</div>
+              </div>
+            </div>
+            
+            <p className="text-gray-400 text-center text-sm">
+              Nosso servidor está sempre em constante crescimento. Confira nossos números atuais e faça parte desta comunidade!
             </p>
           </div>
-
-          <div className="space-y-6">
-            <div className="flex items-start gap-4">
-              <div className="bg-primary/10 p-2 rounded-lg">
-                <User className="h-6 w-6 text-primary" />
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-white">Gerencie seus Personagens</h3>
-                <p className="text-gray-300 text-sm">
-                  Acompanhe o progresso dos seus personagens, seus bens e estatísticas em tempo real.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4">
-              <div className="bg-primary/10 p-2 rounded-lg">
-                <Lock className="h-6 w-6 text-primary" />
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-white">Segurança Garantida</h3>
-                <p className="text-gray-300 text-sm">
-                  Seus dados são protegidos com os mais altos padrões de segurança.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4">
-              <div className="bg-primary/10 p-2 rounded-lg">
-                <ExternalLink className="h-6 w-6 text-primary" />
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-white">Conecte suas Contas</h3>
-                <p className="text-gray-300 text-sm">
-                  Vincule suas contas de Steam, Discord e outras plataformas para uma experiência integrada.
-                </p>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-gray-900/30 border-t border-gray-800 py-6">
+        <div className="container mx-auto px-4 text-center text-gray-500 text-sm">
+          &copy; {new Date().getFullYear()} FishGG. Todos os direitos reservados.
+        </div>
+      </footer>
     </div>
   );
 }

@@ -9,6 +9,8 @@ import { useEffect } from "react";
 import { AuthProvider } from "@/hooks/use-auth";
 import { ProtectedRoute } from "@/lib/protected-route";
 import Home from "@/pages/home";
+import AuthPage from "@/pages/auth-page";
+import Dashboard from "@/pages/dashboard";
 
 // Configuração das rotas principais
 function Router() {
@@ -16,6 +18,12 @@ function Router() {
     <Switch>
       {/* Rotas públicas */}
       <Route path="/" component={Home} />
+      <Route path="/auth" component={AuthPage} />
+      
+      {/* Rotas protegidas */}
+      <Route path="/dashboard">
+        {() => <ProtectedRoute path="/dashboard" component={Dashboard} />}
+      </Route>
       
       {/* Placeholder para todas as outras rotas */}
       <Route component={NotFound} />
