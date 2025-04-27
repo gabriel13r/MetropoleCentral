@@ -1,4 +1,4 @@
-declare module 'passport-steam' {
+declare module 'passport-discord' {
   import { Strategy as PassportStrategy } from 'passport';
   
   export interface Profile {
