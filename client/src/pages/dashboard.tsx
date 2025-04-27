@@ -22,21 +22,9 @@ function Dashboard() {
   const { user, logoutMutation } = useAuth();
   const [, setLocation] = useLocation();
 
-  // Dados de teste para depuração
-  const debugUser = {
-    id: 1,
-    username: "UsuarioTeste",
-    displayName: "Usuário de Teste",
-    avatar: "https://avatars.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg",
-    diamonds: 500,
-    role: "player",
-    isVip: false,
-    steamId: "76561198081489182",
-    hexId: "123456789"
-  };
-
-  // Usuário para renderização: o real quando autenticado ou o fake para depuração
-  const userToRender = user || debugUser;
+  // Garantir que apenas usuários autenticados acessem o dashboard
+  // Se não houver usuário, o ProtectedRoute já deve redirecionar para a página de login
+  const userToRender = user;
 
   // Função para lidar com o logout
   const handleLogout = () => {
