@@ -44,59 +44,27 @@ function AuthPage() {
 
       {/* Main Content */}
       <main className="flex-grow container mx-auto px-4 py-10 md:py-20">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-          {/* Left Column - Auth */}
-          <div className="flex flex-col items-center md:items-start">
-            <h1 className="text-3xl md:text-4xl font-bold mb-6 text-center md:text-left">
-              Entre no servidor <span className="text-blue-500">FishGG</span>
-            </h1>
-            <p className="text-gray-400 mb-10 text-center md:text-left max-w-md">
-              Faça login com sua conta Steam para acessar nosso servidor, gerenciar seus personagens e participar de nossa comunidade.
-            </p>
+        <div className="flex flex-col items-center justify-center max-w-xl mx-auto">
+          <h1 className="text-3xl md:text-4xl font-bold mb-6 text-center">
+            Entre no servidor <span className="text-blue-500">FishGG</span>
+          </h1>
+          <p className="text-gray-400 mb-10 text-center max-w-md">
+            Faça login com sua conta Steam para acessar nosso servidor, gerenciar seus personagens e participar de nossa comunidade.
+          </p>
+          
+          <div className="flex flex-col items-center w-full space-y-6">
+            <SteamLoginButton variant="large" className="w-full md:w-auto" />
             
-            <div className="flex flex-col items-center w-full md:items-start space-y-6">
-              <SteamLoginButton variant="large" className="w-full md:w-auto" />
-              
-              <div className="text-sm text-gray-500 max-w-md text-center md:text-left">
-                Ao continuar, você concorda com nossos {" "}
-                <Link href="/termos" className="text-blue-500 hover:underline">
-                  Termos de Serviço
-                </Link>{" "}
-                e{" "}
-                <Link href="/privacidade" className="text-blue-500 hover:underline">
-                  Política de Privacidade
-                </Link>
-              </div>
+            <div className="text-sm text-gray-500 max-w-md text-center">
+              Ao continuar, você concorda com nossos {" "}
+              <Link href="/termos" className="text-blue-500 hover:underline">
+                Termos de Serviço
+              </Link>{" "}
+              e{" "}
+              <Link href="/privacidade" className="text-blue-500 hover:underline">
+                Política de Privacidade
+              </Link>
             </div>
-          </div>
-
-          {/* Right Column - Info */}
-          <div className="bg-gray-900/50 rounded-lg p-8 border border-gray-800">
-            <h2 className="text-2xl font-bold mb-6 text-center">Estatísticas do Servidor</h2>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-              <div className="bg-gray-800/50 p-4 rounded-lg text-center">
-                <Users className="w-8 h-8 text-purple-500 mx-auto mb-2" />
-                <div className="text-2xl font-bold">40.000+</div>
-                <div className="text-gray-400 text-sm">Usuários registrados</div>
-              </div>
-              
-              <div className="bg-gray-800/50 p-4 rounded-lg text-center">
-                <Shield className="w-8 h-8 text-blue-500 mx-auto mb-2" />
-                <div className="text-2xl font-bold">500+</div>
-                <div className="text-gray-400 text-sm">Jogadores online</div>
-              </div>
-              
-              <div className="bg-gray-800/50 p-4 rounded-lg text-center">
-                <Clock className="w-8 h-8 text-green-500 mx-auto mb-2" />
-                <div className="text-2xl font-bold">24/7</div>
-                <div className="text-gray-400 text-sm">Servidor online</div>
-              </div>
-            </div>
-            
-            <p className="text-gray-400 text-center text-sm">
-              Nosso servidor está sempre em constante crescimento. Confira nossos números atuais e faça parte desta comunidade!
-            </p>
           </div>
         </div>
       </main>
