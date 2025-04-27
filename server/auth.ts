@@ -127,15 +127,11 @@ export function setupAuth(app: Express) {
   app.get('/api/auth/steam/return', 
     passport.authenticate('steam', { failureRedirect: '/auth?error=steam-auth-failed' }),
     (req: Request, res: Response) => {
-      // Login bem-sucedido, redireciona para o dashboard no cliente (porta 3000)
+      // Login bem-sucedido, redireciona para o dashboard
       console.log(`[AUTH] Login Steam bem-sucedido, redirecionando para /dashboard. User: ${JSON.stringify(req.user)}`);
       
-      // Em desenvolvimento, redirecionamos para a porta 3000
-      if (process.env.NODE_ENV === 'development') {
-        res.redirect('http://localhost:3000/dashboard');
-      } else {
-        res.redirect('/dashboard');
-      }
+      // Redirecionamos para o dashboard
+      res.redirect('/dashboard');
     }
   );
 

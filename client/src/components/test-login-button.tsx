@@ -16,9 +16,12 @@ export function TestLoginButton({ className = "" }: TestLoginButtonProps) {
 
   const handleTestLogin = async () => {
     try {
-      await apiRequest("POST", "/api/auth/test-login");
+      const response = await apiRequest("POST", "/api/auth/test-login");
+      const userData = await response.json();
+      console.log("[AUTH] Login de teste bem-sucedido, redirecionando...", userData);
       window.location.href = "/dashboard";
     } catch (error) {
+      console.error("[AUTH] Erro no login de teste:", error);
       toast({
         title: "Erro no login de teste",
         description: "Não foi possível fazer login com a conta de teste.",
