@@ -22,30 +22,13 @@ function Dashboard() {
   const { user, logoutMutation } = useAuth();
   const [, setLocation] = useLocation();
 
-  // Para evitar problemas com a página em branco, voltaremos ao estado anterior
-  // Dados para exibição quando não há login
-  const fallbackUser = {
-    id: 999,
-    username: "Convidado",
-    displayName: "Modo de Visualização",
-    avatar: "https://avatars.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg",
-    diamonds: 0,
-    role: "viewer",
-    isVip: false,
-    steamId: "Faça login",
-    hexId: "Faça login"
-  };
+  // Apenas usuário autenticado pode acessar o dashboard
+  // ProtectedRoute já garante que user não será nulo
+  const userToRender = user!;
 
-  // Usar o usuário real ou fallback para visualização
-  const userToRender = user || fallbackUser;
-
-  // Função para lidar com o logout ou redirecionamento para login
+  // Função para lidar com o logout
   const handleLogout = () => {
-    if (user) {
-      logoutMutation.mutate();
-    } else {
-      setLocation('/auth');
-    }
+    logoutMutation.mutate();
   };
 
   return (
@@ -123,7 +106,7 @@ function Dashboard() {
             onClick={handleLogout}
           >
             <LogOut className="mr-2 h-4 w-4" />
-            {user ? 'Sair' : 'Fazer Login'}
+            Sair
           </Button>
         </div>
       </aside>
@@ -154,20 +137,6 @@ function Dashboard() {
       {/* Main Content */}
       <main className="flex-1 p-4 md:p-8 overflow-auto md:pt-8 pt-20">
         <div className="max-w-6xl mx-auto">
-          {!user && (
-            <div className="bg-blue-900/30 border border-blue-700 rounded-lg p-4 mb-6 flex items-center">
-              <div className="bg-blue-500/20 p-2 rounded-full mr-4">
-                <User className="h-6 w-6 text-blue-500" />
-              </div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-blue-300">Você está no modo de visualização</h3>
-                <p className="text-sm text-blue-200">Para acessar todas as funcionalidades, <Link href="/auth" className="text-blue-400 underline">faça login com sua conta Steam</Link>.</p>
-              </div>
-              <Button size="sm" asChild className="bg-blue-600 hover:bg-blue-700 ml-4">
-                <Link href="/auth">Fazer Login</Link>
-              </Button>
-            </div>
-          )}
           
           <h1 className="text-2xl md:text-3xl font-bold mb-2">Olá, {userToRender.displayName || userToRender.username}!</h1>
           <p className="text-gray-400 mb-8">Bem-vindo ao seu painel de jogador.</p>

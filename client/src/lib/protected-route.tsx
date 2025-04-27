@@ -21,6 +21,7 @@ export function ProtectedRoute({
     );
   }
 
+  // Se não estiver autenticado, redireciona para a página de login
   if (!user) {
     return (
       <Route path={path}>
@@ -29,5 +30,6 @@ export function ProtectedRoute({
     );
   }
 
+  // Se estiver autenticado, renderiza o componente protegido
   return <Route path={path} component={Component} />;
 }
