@@ -149,6 +149,44 @@ export function setupAuth(app: Express) {
     res.json(req.user);
   });
 
+  // Rota para login de teste (apenas para desenvolvimento)
+  app.post('/api/auth/test-login', (req: Request, res: Response) => {
+    if (process.env.NODE_ENV !== 'development') {
+      return res.status(403).json({ message: "Test login only available in development" });
+    }
+
+    // Criar um usuário de teste
+    const testUser = {
+      id: 999,
+      username: 'testuser',
+      displayName: 'Usuário de Teste',
+      role: 'user',
+      diamonds: 500,
+      isVip: true,
+      steamId: '76561198123456789',
+      hexId: null,
+      discordId: null,
+      email: null,
+      password: null,
+      vipExpiry: null,
+      stripeCustomerId: null,
+      stripeSubscriptionId: null,
+      avatar: 'https://avatars.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg',
+      joinedAt: new Date(),
+      lastLogin: new Date()
+    };
+
+    // Login manual
+    req.login(testUser, (err) => {
+      if (err) {
+        console.error('[AUTH] Erro no login de teste:', err);
+        return res.status(500).json({ message: "Erro no login de teste" });
+      }
+      console.log('[AUTH] Login de teste bem-sucedido');
+      res.status(200).json(testUser);
+    });
+  });
+
   // Rota para logout
   app.post('/api/logout', (req: Request, res: Response, next: NextFunction) => {
     req.logout((err) => {
