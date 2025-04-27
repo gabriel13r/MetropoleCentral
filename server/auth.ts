@@ -6,6 +6,10 @@ import { Strategy as SteamStrategy } from "passport-steam";
 import { User as UserType } from "@shared/schema";
 import { storage } from "./storage";
 
+// Injetando a API Key manualmente
+const STEAM_API_KEY = "613AB4531BB222FCD4ABCD7E44AC6B8F";
+
+// Adicionando tipo para session-express
 declare global {
   namespace Express {
     interface Session {
@@ -15,24 +19,18 @@ declare global {
   }
 }
 
-// Adicionando tipo para session-express
 declare module "express-session" {
   interface SessionData {
     userId?: number;
   }
 }
 
-// Verificar a chave de API da Steam
-if (!process.env.STEAM_API_KEY) {
-  console.error("STEAM_API_KEY is not set. Steam authentication will not work properly.");
-}
-
 // Usando a URL do Replit como base, ou localhost se não estiver disponível
 const BASE_URL = process.env.REPLIT_SLUG 
   ? `https://${process.env.REPLIT_SLUG}.${process.env.REPLIT_OWNER}.repl.co`
   : process.env.PORT 
-    ? `http://localhost:${process.env.PORT}` 
-    : "http://localhost:5000";
+    ? `http://127.0.0.1:${process.env.PORT}` 
+    : "http://127.0.0.1:5000";
 
 const CALLBACK_URL = process.env.NODE_ENV === "production"
   ? "https://fishgg.com/api/auth/steam/return"  // URL de produção
@@ -85,19 +83,18 @@ export function setupAuth(app: Express) {
   console.log(`[AUTH] Configurando Steam Strategy com:`);
   console.log(`[AUTH] - returnURL: ${CALLBACK_URL}`);
   console.log(`[AUTH] - realm: ${realm}`);
-  console.log(`[AUTH] - apiKey: ${process.env.STEAM_API_KEY ? "Configurada" : "NÃO CONFIGURADA"}`);
+  console.log(`[AUTH] - apiKey: ${STEAM_API_KEY ? "Configurada" : "NÃO CONFIGURADA"}`);
   
   passport.use(new SteamStrategy({
     returnURL: CALLBACK_URL,
     realm: realm,
-    apiKey: process.env.STEAM_API_KEY as string
+    apiKey: STEAM_API_KEY
   }, async (identifier: string, profile: any, done: any) => {
     try {
       const steamId = profile.id;
       let user = await storage.getUserBySteamId(steamId);
 
       if (!user) {
-        // Criar novo usuário com dados do perfil Steam
         user = await storage.createUser({
           username: profile.displayName,
           steamId: steamId,
@@ -105,7 +102,6 @@ export function setupAuth(app: Express) {
           avatar: profile._json.avatarfull
         });
       } else {
-        // Atualizar informações do usuário existente
         user = await storage.updateUser(user.id, {
           displayName: profile.displayName,
           avatar: profile._json.avatarfull
@@ -127,10 +123,7 @@ export function setupAuth(app: Express) {
   app.get('/api/auth/steam/return', 
     passport.authenticate('steam', { failureRedirect: '/auth?error=steam-auth-failed' }),
     (req: Request, res: Response) => {
-      // Login bem-sucedido, redireciona para o dashboard
       console.log(`[AUTH] Login Steam bem-sucedido, redirecionando para /dashboard. User: ${JSON.stringify(req.user)}`);
-      
-      // Redirecionamos para o dashboard
       res.redirect('/dashboard');
     }
   );
@@ -145,12 +138,10 @@ export function setupAuth(app: Express) {
     res.json(req.user);
   });
 
-  // Rota para login de teste (disponível em qualquer ambiente para facilitar testes)
+  // Rota para login de teste
   app.post('/api/auth/test-login', (req: Request, res: Response) => {
-    // Não restringimos mais ao ambiente de desenvolvimento
     console.log('[AUTH] Recebida requisição de login de teste');
 
-    // Criar um usuário de teste
     const testUser = {
       id: 999,
       username: 'testuser',
@@ -171,7 +162,6 @@ export function setupAuth(app: Express) {
       lastLogin: new Date()
     };
 
-    // Login manual
     req.login(testUser, (err) => {
       if (err) {
         console.error('[AUTH] Erro no login de teste:', err);
