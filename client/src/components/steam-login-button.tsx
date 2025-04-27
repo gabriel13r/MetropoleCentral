@@ -14,8 +14,9 @@ export function SteamLoginButton({ className, variant = "default" }: SteamLoginB
         variant === "large" ? "py-6 px-8 text-lg" : "py-2 px-4"
       } ${className}`}
       onClick={() => {
-        // Redirecionando para a porta 3001 (desenvolvimento local)
-        window.location.href = "http://localhost:3001/api/auth/steam";
+        // Configurações flexíveis para desenvolvimento local e Replit
+        const port = import.meta.env.VITE_API_PORT || '5000';
+        window.location.href = `http://localhost:${port}/api/auth/steam`;
       }}
     >
       <SiSteam className={variant === "large" ? "h-6 w-6" : "h-5 w-5"} />

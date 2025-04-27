@@ -7,10 +7,11 @@ async function throwIfResNotOk(res: Response) {
   }
 }
 
-// Ajustar URLs para apontar para a porta 3001 no desenvolvimento
+// Configurações flexíveis de URL base para desenvolvimento local e Replit
+const DEFAULT_PORT = '5000';
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
   ? '' 
-  : 'http://localhost:3001';
+  : `http://localhost:${import.meta.env.VITE_API_PORT || DEFAULT_PORT}`;
 
 export async function apiRequest(
   method: string,

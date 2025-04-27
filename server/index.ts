@@ -60,9 +60,9 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  // Servidor na porta 3001 para desenvolvimento local no Windows
-  // Em produção ou no Replit, use a porta 5000
-  const port = process.env.PORT || 3001;
+  // Em ambientes Replit, use a porta 5000
+  // Em ambiente Windows local, use a porta 3001 (defina PORT=3001)
+  const port = process.env.PORT || 5000;
   server.listen({
     port,
     host: "0.0.0.0",

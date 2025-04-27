@@ -30,7 +30,9 @@ if (!process.env.STEAM_API_KEY) {
 // Usando a URL do Replit como base, ou localhost se não estiver disponível
 const BASE_URL = process.env.REPLIT_SLUG 
   ? `https://${process.env.REPLIT_SLUG}.${process.env.REPLIT_OWNER}.repl.co`
-  : "http://localhost:3001";  // Porta 3001 para desenvolvimento local no Windows
+  : process.env.PORT 
+    ? `http://localhost:${process.env.PORT}` 
+    : "http://localhost:5000";
 
 const CALLBACK_URL = process.env.NODE_ENV === "production"
   ? "https://fishgg.com/api/auth/steam/return"  // URL de produção
