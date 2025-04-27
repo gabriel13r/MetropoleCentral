@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useLocation, Link } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { 
@@ -37,19 +37,6 @@ function Dashboard() {
 
   // Usuário para renderização: o real quando autenticado ou o fake para depuração
   const userToRender = user || debugUser;
-
-  // Sempre vamos renderizar o dashboard com userToRender
-  // Comentando a verificação para depuração
-  /*
-  if (!user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 to-black">
-        <div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full"></div>
-        <span className="ml-3 text-gray-300">Carregando...</span>
-      </div>
-    );
-  }
-  */
 
   // Função para lidar com o logout
   const handleLogout = () => {
@@ -148,12 +135,12 @@ function Dashboard() {
             <Button variant="ghost" size="sm" asChild>
               <Link href="/dashboard/diamonds">
                 <Diamond className="h-4 w-4 mr-1" />
-                {user.diamonds}
+                {userToRender.diamonds}
               </Link>
             </Button>
             <Avatar className="h-8 w-8">
-              <AvatarImage src={user.avatar} alt={user.displayName || user.username} />
-              <AvatarFallback>{(user.displayName || user.username)?.charAt(0)}</AvatarFallback>
+              <AvatarImage src={userToRender.avatar} alt={userToRender.displayName || userToRender.username} />
+              <AvatarFallback>{(userToRender.displayName || userToRender.username)?.charAt(0)}</AvatarFallback>
             </Avatar>
           </div>
         </div>
@@ -162,7 +149,7 @@ function Dashboard() {
       {/* Main Content */}
       <main className="flex-1 p-4 md:p-8 overflow-auto md:pt-8 pt-20">
         <div className="max-w-6xl mx-auto">
-          <h1 className="text-2xl md:text-3xl font-bold mb-2">Olá, {user.displayName || user.username}!</h1>
+          <h1 className="text-2xl md:text-3xl font-bold mb-2">Olá, {userToRender.displayName || userToRender.username}!</h1>
           <p className="text-gray-400 mb-8">Bem-vindo ao seu painel de jogador.</p>
           
           {/* User Info Section */}
@@ -174,13 +161,13 @@ function Dashboard() {
               <CardContent>
                 <div className="flex items-center">
                   <Avatar className="h-16 w-16 mr-4 border-2 border-blue-500">
-                    <AvatarImage src={user.avatar} alt={user.displayName || user.username} />
-                    <AvatarFallback>{(user.displayName || user.username)?.charAt(0)}</AvatarFallback>
+                    <AvatarImage src={userToRender.avatar} alt={userToRender.displayName || userToRender.username} />
+                    <AvatarFallback>{(userToRender.displayName || userToRender.username)?.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="font-bold text-xl">{user.displayName || user.username}</p>
-                    <p className="text-gray-400 text-sm">Steam ID: {user.steamId || 'N/A'}</p>
-                    <p className="text-gray-400 text-sm">Hex ID: {user.hexId || 'N/A'}</p>
+                    <p className="font-bold text-xl">{userToRender.displayName || userToRender.username}</p>
+                    <p className="text-gray-400 text-sm">Steam ID: {userToRender.steamId || 'N/A'}</p>
+                    <p className="text-gray-400 text-sm">Hex ID: {userToRender.hexId || 'N/A'}</p>
                   </div>
                 </div>
               </CardContent>
@@ -197,7 +184,7 @@ function Dashboard() {
                       <Diamond className="h-8 w-8 text-blue-500" />
                     </div>
                     <div>
-                      <p className="font-bold text-2xl">{user.diamonds}</p>
+                      <p className="font-bold text-2xl">{userToRender.diamonds}</p>
                       <p className="text-gray-400 text-sm">Diamantes disponíveis</p>
                     </div>
                   </div>
@@ -216,14 +203,14 @@ function Dashboard() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <p className="text-gray-400">Status de VIP:</p>
-                    <span className={`px-2 py-1 rounded text-xs ${user.isVip ? 'bg-green-500/20 text-green-500' : 'bg-gray-500/20 text-gray-500'}`}>
-                      {user.isVip ? 'ATIVO' : 'INATIVO'}
+                    <span className={`px-2 py-1 rounded text-xs ${userToRender.isVip ? 'bg-green-500/20 text-green-500' : 'bg-gray-500/20 text-gray-500'}`}>
+                      {userToRender.isVip ? 'ATIVO' : 'INATIVO'}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
                     <p className="text-gray-400">Tipo de conta:</p>
                     <span className="px-2 py-1 rounded text-xs bg-blue-500/20 text-blue-500">
-                      {user.role?.toUpperCase() || 'JOGADOR'}
+                      {userToRender.role?.toUpperCase() || 'JOGADOR'}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
@@ -358,11 +345,9 @@ function Dashboard() {
                       <LogOut className="h-5 w-5 text-blue-500" />
                     </div>
                     <div>
-                      <p className="font-medium">Login realizado</p>
-                      <p className="text-gray-400 text-sm">Hoje, 15:30</p>
-                      <p className="text-gray-500 text-sm mt-1">
-                        Você fez login através da autenticação Steam.
-                      </p>
+                      <p className="font-medium">Login no servidor</p>
+                      <p className="text-gray-400 text-sm">Hoje, 14:23</p>
+                      <p className="text-gray-500 mt-1">Você fez login no servidor de GTA RP.</p>
                     </div>
                   </div>
                   
@@ -371,24 +356,9 @@ function Dashboard() {
                       <Gamepad2 className="h-5 w-5 text-purple-500" />
                     </div>
                     <div>
-                      <p className="font-medium">Personagem jogado</p>
-                      <p className="text-gray-400 text-sm">Ontem, 20:45</p>
-                      <p className="text-gray-500 text-sm mt-1">
-                        Você jogou com o personagem John Doe por 3 horas.
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start bg-gray-800/50 p-4 rounded-lg">
-                    <div className="bg-green-500/20 p-2 rounded-full mr-4">
-                      <ShieldCheck className="h-5 w-5 text-green-500" />
-                    </div>
-                    <div>
-                      <p className="font-medium">Solicitação de whitelist</p>
-                      <p className="text-gray-400 text-sm">22 Abr 2025</p>
-                      <p className="text-gray-500 text-sm mt-1">
-                        Sua solicitação de whitelist foi enviada e está aguardando aprovação.
-                      </p>
+                      <p className="font-medium">Personagem criado</p>
+                      <p className="text-gray-400 text-sm">20 Abr 2025</p>
+                      <p className="text-gray-500 mt-1">Você criou um novo personagem: Clara Smith.</p>
                     </div>
                   </div>
                 </div>

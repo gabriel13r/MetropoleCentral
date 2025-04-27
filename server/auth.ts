@@ -78,9 +78,16 @@ export function setupAuth(app: Express) {
   });
 
   // Estratégia de autenticação Steam
+  const realm = BASE_URL; // Usando base_url completo como realm
+  
+  console.log(`[AUTH] Configurando Steam Strategy com:`);
+  console.log(`[AUTH] - returnURL: ${CALLBACK_URL}`);
+  console.log(`[AUTH] - realm: ${realm}`);
+  console.log(`[AUTH] - apiKey: ${process.env.STEAM_API_KEY ? "Configurada" : "NÃO CONFIGURADA"}`);
+  
   passport.use(new SteamStrategy({
     returnURL: CALLBACK_URL,
-    realm: CALLBACK_URL.split('/api')[0], // URL base
+    realm: realm,
     apiKey: process.env.STEAM_API_KEY as string
   }, async (identifier: string, profile: any, done: any) => {
     try {
@@ -118,9 +125,15 @@ export function setupAuth(app: Express) {
   app.get('/api/auth/steam/return', 
     passport.authenticate('steam', { failureRedirect: '/auth?error=steam-auth-failed' }),
     (req: Request, res: Response) => {
-      // Login bem-sucedido, redireciona para o dashboard
+      // Login bem-sucedido, redireciona para o dashboard no cliente (porta 3000)
       console.log(`[AUTH] Login Steam bem-sucedido, redirecionando para /dashboard. User: ${JSON.stringify(req.user)}`);
-      res.redirect('/dashboard');
+      
+      // Em desenvolvimento, redirecionamos para a porta 3000
+      if (process.env.NODE_ENV === 'development') {
+        res.redirect('http://localhost:3000/dashboard');
+      } else {
+        res.redirect('/dashboard');
+      }
     }
   );
 
