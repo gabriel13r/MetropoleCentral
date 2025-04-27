@@ -4,15 +4,20 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
-import Home from "@/pages/home";
 import { ThemeProvider } from "next-themes";
 import { useEffect } from "react";
+import { AuthProvider } from "@/hooks/use-auth";
+import { ProtectedRoute } from "@/lib/protected-route";
+import Home from "@/pages/home";
 
 // Configuração das rotas principais
 function Router() {
   return (
     <Switch>
+      {/* Rotas públicas */}
       <Route path="/" component={Home} />
+      
+      {/* Placeholder para todas as outras rotas */}
       <Route component={NotFound} />
     </Switch>
   );
@@ -35,10 +40,12 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="dark" forcedTheme="dark">
         <ForceDarkMode />
-        <TooltipProvider>
-          <Toaster />
-          <Router />
-        </TooltipProvider>
+        <AuthProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Router />
+          </TooltipProvider>
+        </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

@@ -1,138 +1,125 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { LogIn, Menu, X, Users, Gamepad2, Book, Award, HelpCircle, Download } from "lucide-react";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Menu, X, Diamond } from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
 
 const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { user } = useAuth();
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
-  const closeMenu = () => {
-    setIsMenuOpen(false);
-  };
-
-  const handleSteamLogin = () => {
-    // Implementação futura da autenticação com Steam
-    console.log("Steam login clicked");
-  };
+  const navItems = [
+    { name: "Início", href: "/" },
+    { name: "Notícias", href: "/noticias" },
+    { name: "Galeria", href: "/galeria" },
+    { name: "Loja", href: "/loja" },
+    { name: "Suporte", href: "/suporte" },
+  ];
 
   return (
-    <header className="bg-card-dark text-white sticky top-0 z-50 border-b border-gray-800">
+    <header className="bg-black/40 backdrop-blur-md sticky top-0 z-50 border-b border-border/40">
       <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center py-3">
+        <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center">
-            <Link href="/" className="font-bold text-3xl text-gradient-game">
-              METROPOLE
-            </Link>
-          </div>
+          <Link href="/" className="flex items-center space-x-2">
+            <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-pink-500">
+              FISH<span className="text-white">GG</span>
+            </span>
+          </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-6">
-            <Link href="/" className="text-white hover:text-primary transition duration-200 font-medium flex items-center gap-1">
-              <Gamepad2 size={18} />
-              <span>Servidor</span>
-            </Link>
-            <Link href="/characters" className="text-white hover:text-primary transition duration-200 font-medium flex items-center gap-1">
-              <Users size={18} />
-              <span>Personagens</span>
-            </Link>
-            <Link href="/rules" className="text-white hover:text-primary transition duration-200 font-medium flex items-center gap-1">
-              <Book size={18} />
-              <span>Regras</span>
-            </Link>
-            <Link href="/whitelist" className="text-white hover:text-primary transition duration-200 font-medium flex items-center gap-1">
-              <Award size={18} />
-              <span>Whitelist</span>
-            </Link>
-            <Link href="/support" className="text-white hover:text-primary transition duration-200 font-medium flex items-center gap-1">
-              <HelpCircle size={18} />
-              <span>Suporte</span>
-            </Link>
+          {/* Desktop navigation */}
+          <nav className="hidden md:flex md:space-x-8">
+            {navItems.map((item) => (
+              <Link
+                key={item.name}
+                href={item.href}
+                className="text-gray-300 hover:text-white transition-colors px-3 py-2 text-sm font-medium"
+              >
+                {item.name}
+              </Link>
+            ))}
           </nav>
 
-          {/* Mobile menu button */}
-          <div className="lg:hidden flex items-center">
-            <button 
-              onClick={toggleMenu}
-              className="text-white hover:text-primary focus:outline-none"
-              aria-label={isMenuOpen ? "Fechar menu" : "Abrir menu"}
-            >
-              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
+          {/* Action buttons (desktop) */}
+          <div className="hidden md:flex md:items-center md:space-x-4">
+            {user ? (
+              <Link href="/dashboard">
+                <Button variant="secondary" className="flex items-center gap-2">
+                  <Diamond className="w-4 h-4" />
+                  <span>{user.diamonds}</span>
+                  <span className="ml-2">{user.displayName || user.username}</span>
+                </Button>
+              </Link>
+            ) : (
+              <>
+                <Link href="/auth">
+                  <Button variant="outline">Entrar</Button>
+                </Link>
+                <Link href="/auth?register=true">
+                  <Button className="bg-gradient-game">Registrar</Button>
+                </Link>
+              </>
+            )}
           </div>
 
-          {/* Login/Download buttons (desktop) */}
-          <div className="hidden lg:flex items-center space-x-4">
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="border-primary text-white hover:bg-primary hover:text-white"
-              onClick={handleSteamLogin}
-            >
-              <LogIn className="h-4 w-4 mr-1" />
-              Entrar com Steam
-            </Button>
-            <Button 
-              variant="default" 
-              size="sm" 
-              className="bg-gradient-game hover:opacity-90"
-            >
-              <Download className="h-4 w-4 mr-1" />
-              Baixar Launcher
-            </Button>
+          {/* Mobile menu button */}
+          <div className="flex md:hidden">
+            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="text-white">
+                  <Menu className="h-6 w-6" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="bg-background-dark border-gray-800 w-[300px] p-0">
+                <div className="flex flex-col h-full p-6">
+                  <div className="flex items-center justify-between mb-8">
+                    <Link href="/" onClick={() => setMobileMenuOpen(false)}>
+                      <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-pink-500">
+                        FISH<span className="text-white">GG</span>
+                      </span>
+                    </Link>
+                    <Button variant="ghost" size="icon" onClick={() => setMobileMenuOpen(false)}>
+                      <X className="h-6 w-6" />
+                    </Button>
+                  </div>
+                  <nav className="flex flex-col space-y-4 mb-8">
+                    {navItems.map((item) => (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        className="text-gray-300 hover:text-white transition-colors py-2 text-lg font-medium"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        {item.name}
+                      </Link>
+                    ))}
+                  </nav>
+                  <div className="mt-auto space-y-4">
+                    {user ? (
+                      <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)}>
+                        <Button className="w-full bg-gradient-game">Acessar Painel</Button>
+                      </Link>
+                    ) : (
+                      <>
+                        <Link href="/auth" onClick={() => setMobileMenuOpen(false)}>
+                          <Button variant="outline" className="w-full">Entrar</Button>
+                        </Link>
+                        <Link href="/auth?register=true" onClick={() => setMobileMenuOpen(false)}>
+                          <Button className="w-full bg-gradient-game">Registrar</Button>
+                        </Link>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
-
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <div className="lg:hidden pb-4 pt-2 border-t border-gray-800">
-            <div className="flex flex-col space-y-4">
-              <Link href="/" onClick={closeMenu} className="text-white hover:text-primary transition duration-200 font-medium flex items-center gap-2">
-                <Gamepad2 size={18} />
-                <span>Servidor</span>
-              </Link>
-              <Link href="/characters" onClick={closeMenu} className="text-white hover:text-primary transition duration-200 font-medium flex items-center gap-2">
-                <Users size={18} />
-                <span>Personagens</span>
-              </Link>
-              <Link href="/rules" onClick={closeMenu} className="text-white hover:text-primary transition duration-200 font-medium flex items-center gap-2">
-                <Book size={18} />
-                <span>Regras</span>
-              </Link>
-              <Link href="/whitelist" onClick={closeMenu} className="text-white hover:text-primary transition duration-200 font-medium flex items-center gap-2">
-                <Award size={18} />
-                <span>Whitelist</span>
-              </Link>
-              <Link href="/support" onClick={closeMenu} className="text-white hover:text-primary transition duration-200 font-medium flex items-center gap-2">
-                <HelpCircle size={18} />
-                <span>Suporte</span>
-              </Link>
-              <div className="pt-3 flex flex-col space-y-3 border-t border-gray-800">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="border-primary text-white hover:bg-primary hover:text-white"
-                  onClick={handleSteamLogin}
-                >
-                  <LogIn className="h-4 w-4 mr-1" />
-                  Entrar com Steam
-                </Button>
-                <Button 
-                  variant="default" 
-                  size="sm" 
-                  className="bg-gradient-game hover:opacity-90"
-                >
-                  <Download className="h-4 w-4 mr-1" />
-                  Baixar Launcher
-                </Button>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </header>
   );

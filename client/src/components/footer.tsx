@@ -1,85 +1,83 @@
 import { Link } from "wouter";
-import { Button } from "@/components/ui/button";
-import { FaDiscord, FaInstagram, FaTiktok, FaYoutube, FaSteam } from "react-icons/fa";
-import { Download } from "lucide-react";
+import { SiDiscord, SiInstagram, SiTiktok, SiYoutube, SiFacebook } from "react-icons/si";
 
 const Footer = () => {
-  const currentYear = new Date().getFullYear();
-
   return (
-    <footer className="bg-background-dark text-white pt-12 pb-6">
+    <footer className="bg-black text-white py-12 border-t border-gray-800">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-          <div>
-            <h3 className="font-bold text-2xl mb-6 text-gradient-game">METROPOLE RP</h3>
-            <p className="text-white opacity-80 mb-6">
-              Servidor de GTA RP com foco em roleplay de qualidade e experiência imersiva. Junte-se a nós e viva aventuras únicas em nossa cidade virtual.
+        {/* Logo e social */}
+        <div className="flex flex-col md:flex-row justify-between mb-12">
+          <div className="mb-8 md:mb-0">
+            <Link href="/">
+              <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-pink-500">
+                FISH<span className="text-white">GG</span>
+              </span>
+            </Link>
+            <p className="mt-4 text-gray-400 max-w-md">
+              O melhor servidor de RolePlay brasileiro. Venha criar sua história 
+              e viver aventuras incríveis!
             </p>
-            <div className="flex space-x-4">
-              <a href="#" className="text-white hover:text-primary transition" aria-label="Discord">
-                <FaDiscord className="w-5 h-5" />
+            
+            <div className="flex space-x-4 mt-6">
+              <a href="https://discord.gg/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-primary transition-colors">
+                <SiDiscord className="w-6 h-6" />
               </a>
-              <a href="#" className="text-white hover:text-primary transition" aria-label="Instagram">
-                <FaInstagram className="w-5 h-5" />
+              <a href="https://instagram.com/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-primary transition-colors">
+                <SiInstagram className="w-6 h-6" />
               </a>
-              <a href="#" className="text-white hover:text-primary transition" aria-label="TikTok">
-                <FaTiktok className="w-5 h-5" />
+              <a href="https://tiktok.com/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-primary transition-colors">
+                <SiTiktok className="w-6 h-6" />
               </a>
-              <a href="#" className="text-white hover:text-primary transition" aria-label="YouTube">
-                <FaYoutube className="w-5 h-5" />
+              <a href="https://youtube.com/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-primary transition-colors">
+                <SiYoutube className="w-6 h-6" />
               </a>
-              <a href="#" className="text-white hover:text-primary transition" aria-label="Steam">
-                <FaSteam className="w-5 h-5" />
+              <a href="https://facebook.com/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-primary transition-colors">
+                <SiFacebook className="w-6 h-6" />
               </a>
             </div>
           </div>
-
-          <div>
-            <h4 className="font-bold text-lg mb-4">Navegação</h4>
-            <ul className="space-y-2">
-              <li><Link href="/" className="text-white opacity-80 hover:opacity-100 hover:text-primary transition">Início</Link></li>
-              <li><Link href="/regras" className="text-white opacity-80 hover:opacity-100 hover:text-primary transition">Regras</Link></li>
-              <li><Link href="/forum" className="text-white opacity-80 hover:opacity-100 hover:text-primary transition">Fórum</Link></li>
-              <li><Link href="/servidor" className="text-white opacity-80 hover:opacity-100 hover:text-primary transition">Servidor</Link></li>
-              <li><Link href="/whitelist" className="text-white opacity-80 hover:opacity-100 hover:text-primary transition">Whitelist</Link></li>
-              <li><Link href="/rankings" className="text-white opacity-80 hover:opacity-100 hover:text-primary transition">Rankings</Link></li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-bold text-lg mb-4">Suporte</h4>
-            <ul className="space-y-2">
-              <li><Link href="/sobre" className="text-white opacity-80 hover:opacity-100 hover:text-primary transition">Sobre o servidor</Link></li>
-              <li><Link href="/equipe" className="text-white opacity-80 hover:opacity-100 hover:text-primary transition">Nossa equipe</Link></li>
-              <li><Link href="/faq" className="text-white opacity-80 hover:opacity-100 hover:text-primary transition">Perguntas frequentes</Link></li>
-              <li><Link href="/termos" className="text-white opacity-80 hover:opacity-100 hover:text-primary transition">Termos de uso</Link></li>
-              <li><Link href="/privacidade" className="text-white opacity-80 hover:opacity-100 hover:text-primary transition">Política de privacidade</Link></li>
-              <li><Link href="/contato" className="text-white opacity-80 hover:opacity-100 hover:text-primary transition">Contato</Link></li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-bold text-lg mb-4">Jogar Agora</h4>
-            <p className="text-white opacity-80 mb-4">Baixe nosso launcher exclusivo e entre no servidor para a melhor experiência de GTA RP!</p>
-            <Button variant="default" className="bg-gradient-game hover:opacity-90 w-full">
-              <Download className="h-4 w-4 mr-2" />
-              Baixar Launcher
-            </Button>
-            <div className="mt-4">
-              <p className="text-xs text-white opacity-60">Compatível com Windows 10/11</p>
-              <p className="text-xs text-white opacity-60 mt-1">Versão atual: 1.2.5</p>
+          
+          {/* Links */}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
+            <div>
+              <h3 className="text-lg font-bold mb-4 text-white">Navegação</h3>
+              <ul className="space-y-2">
+                <li><Link href="/" className="text-gray-400 hover:text-primary transition-colors">Início</Link></li>
+                <li><Link href="/noticias" className="text-gray-400 hover:text-primary transition-colors">Notícias</Link></li>
+                <li><Link href="/galeria" className="text-gray-400 hover:text-primary transition-colors">Galeria</Link></li>
+                <li><Link href="/loja" className="text-gray-400 hover:text-primary transition-colors">Loja</Link></li>
+                <li><Link href="/suporte" className="text-gray-400 hover:text-primary transition-colors">Suporte</Link></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h3 className="text-lg font-bold mb-4 text-white">Informações</h3>
+              <ul className="space-y-2">
+                <li><Link href="/sobre" className="text-gray-400 hover:text-primary transition-colors">Sobre Nós</Link></li>
+                <li><Link href="/regras" className="text-gray-400 hover:text-primary transition-colors">Regras</Link></li>
+                <li><Link href="/guias" className="text-gray-400 hover:text-primary transition-colors">Guias</Link></li>
+                <li><Link href="/termos" className="text-gray-400 hover:text-primary transition-colors">Termos de Serviço</Link></li>
+                <li><Link href="/privacidade" className="text-gray-400 hover:text-primary transition-colors">Política de Privacidade</Link></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h3 className="text-lg font-bold mb-4 text-white">Contato</h3>
+              <ul className="space-y-2">
+                <li><a href="mailto:contato@fishgg.com" className="text-gray-400 hover:text-primary transition-colors">contato@fishgg.com</a></li>
+                <li><a href="https://discord.gg/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-primary transition-colors">Discord</a></li>
+              </ul>
             </div>
           </div>
         </div>
-
-        <div className="border-t border-gray-800 pt-6">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-white opacity-60 text-sm">
-              © {currentYear} Metropole RP. Todos os direitos reservados.
-            </p>
-            <p className="text-white opacity-60 text-sm mt-2 md:mt-0">
-              Não afiliado à Rockstar Games ou Take-Two Interactive
-            </p>
+        
+        {/* Copyright */}
+        <div className="pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
+          <p className="text-gray-500 text-sm mb-4 md:mb-0">
+            © {new Date().getFullYear()} FISHGG. Todos os direitos reservados.
+          </p>
+          <div className="text-gray-500 text-sm">
+            Desenvolvido por <a href="#" className="text-primary hover:underline">FishGG Team</a>
           </div>
         </div>
       </div>

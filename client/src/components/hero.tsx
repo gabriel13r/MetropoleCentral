@@ -1,126 +1,99 @@
-import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { FaSteam, FaUsers, FaServer } from "react-icons/fa";
+import { HiChevronRight } from "react-icons/hi";
+import { motion } from "framer-motion";
 
 const HeroSection = () => {
   return (
-    <section className="w-full bg-background-dark text-white py-16">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-          {/* Hero Content */}
-          <div className="space-y-6">
-            <div>
-              <h1 className="text-4xl md:text-5xl font-bold mb-3">
-                <span className="text-gradient-game">METROPOLE</span> GTA RP
+    <section className="relative overflow-hidden">
+      {/* Overlay de fundo com gradiente escuro */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background-dark z-10"></div>
+      
+      {/* Imagem de fundo do hero */}
+      <div className="absolute inset-0 bg-center bg-cover z-0" 
+           style={{ backgroundImage: 'url("https://i.ibb.co/vzZGfD5/hero-bg.jpg")' }}>
+      </div>
+      
+      {/* Conteúdo do hero */}
+      <div className="container mx-auto px-4 relative z-20">
+        <div className="min-h-[80vh] flex flex-col justify-center py-16">
+          <div className="max-w-3xl">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight mb-4">
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-pink-500">
+                  FISH
+                </span>
+                <span className="text-white">GG</span>
+                <span className="block text-white mt-2">
+                  O melhor servidor de RolePlay
+                </span>
               </h1>
-              <p className="text-xl md:text-2xl font-semibold text-gray-200">
-                O melhor servidor de roleplay do Brasil
-              </p>
-            </div>
+            </motion.div>
             
-            <p className="text-gray-300 text-lg max-w-xl">
-              Uma experiência imersiva de GTA RP com uma economia realista, 
-              empregos legais e ilegais, tráfico de drogas, roubos a bancos, 
-              polícia ativa e muito mais. Venha construir sua história em Metropole.
-            </p>
+            <motion.p 
+              className="text-gray-300 text-lg md:text-xl mb-8 max-w-2xl"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              Explore um mundo vasto e imersivo com economia realista, empregos diversificados e uma comunidade ativa. Crie sua história e viva aventuras únicas!
+            </motion.p>
             
-            <div className="flex flex-wrap gap-4 pt-2">
-              <Button 
-                className="bg-gradient-game hover:opacity-90 px-6 py-6 text-lg"
-                size="lg"
-              >
-                <FaServer className="mr-2 h-5 w-5" />
-                Conectar ao Servidor
+            <motion.div 
+              className="flex flex-col sm:flex-row gap-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
+              <Button className="bg-gradient-game hover:opacity-90 h-12 px-8 text-base">
+                Começar Agora
+                <HiChevronRight className="ml-2 h-5 w-5" />
               </Button>
-              
-              <Button 
-                variant="outline" 
-                className="border-primary text-white hover:bg-primary hover:text-white px-6 py-6 text-lg"
-                size="lg"
-              >
-                <FaSteam className="mr-2 h-5 w-5" />
-                Entrar com Steam
+              <Button variant="outline" className="border-primary text-white hover:bg-primary hover:text-white h-12 px-8 text-base">
+                Conheça o Servidor
               </Button>
-            </div>
+            </motion.div>
             
-            <div className="flex flex-wrap gap-6 pt-4">
-              <div className="flex items-center">
-                <div className="w-3 h-3 bg-green-500 rounded-full mr-2 animate-pulse"></div>
-                <span className="text-gray-300">Servidor Online</span>
+            <motion.div 
+              className="mt-8 flex items-center"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.6 }}
+            >
+              <div className="flex -space-x-2">
+                {[1, 2, 3, 4].map((num) => (
+                  <div key={num} className="w-8 h-8 rounded-full bg-gray-600 border-2 border-background-dark overflow-hidden">
+                    <img 
+                      src={`https://i.pravatar.cc/150?img=${num + 10}`} 
+                      alt={`Player ${num}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                ))}
               </div>
-              <div className="flex items-center">
-                <FaUsers className="text-primary mr-2" />
-                <span className="text-gray-300">198/250 jogadores</span>
+              <div className="ml-4 text-sm text-gray-300">
+                <span className="font-bold text-white">+500</span> jogadores online agora
               </div>
-            </div>
-          </div>
-          
-          {/* Server Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Atualização do Servidor */}
-            <div className="bg-card-dark rounded-lg p-5 border border-gray-800 hover:border-primary transition-colors duration-300">
-              <div className="flex items-center mb-3">
-                <div className="h-8 w-1 bg-primary mr-3 rounded-full"></div>
-                <h3 className="font-bold text-lg">Atualização Recente</h3>
-              </div>
-              <h4 className="font-medium mb-2 text-primary">Novos Veículos e Itens</h4>
-              <p className="text-gray-300 text-sm mb-3">
-                Adicionamos 15 novos veículos, novo sistema de plantação e mais empregos para você explorar!
-              </p>
-              <div className="text-xs text-gray-400">
-                Atualizado em 25/04/2025
-              </div>
-            </div>
-            
-            {/* Evento Especial */}
-            <div className="bg-card-dark rounded-lg p-5 border border-gray-800 hover:border-secondary transition-colors duration-300">
-              <div className="flex items-center mb-3">
-                <div className="h-8 w-1 bg-secondary mr-3 rounded-full"></div>
-                <h3 className="font-bold text-lg">Evento da Semana</h3>
-              </div>
-              <h4 className="font-medium mb-2 text-secondary">Corrida Clandestina</h4>
-              <p className="text-gray-300 text-sm mb-3">
-                Participe da corrida clandestina! Prêmio de $100.000 para o vencedor.
-              </p>
-              <div className="text-xs text-gray-400">
-                Sábado às 20h
-              </div>
-            </div>
-            
-            {/* Whitelist Aberta */}
-            <div className="bg-card-dark rounded-lg p-5 border border-gray-800 hover:border-accent transition-colors duration-300">
-              <div className="flex items-center mb-3">
-                <div className="h-8 w-1 bg-accent mr-3 rounded-full"></div>
-                <h3 className="font-bold text-lg">Whitelist Aberta</h3>
-              </div>
-              <p className="text-gray-300 text-sm mb-3">
-                Envie sua história e entre no servidor! Estamos com vagas disponíveis.
-              </p>
-              <Link href="/whitelist" className="text-accent hover:underline text-sm font-medium">
-                Fazer aplicação →
-              </Link>
-            </div>
-            
-            {/* Discord */}
-            <div className="bg-card-dark rounded-lg p-5 border border-gray-800 hover:border-primary transition-colors duration-300">
-              <div className="flex items-center mb-3">
-                <div className="h-8 w-1 bg-primary mr-3 rounded-full"></div>
-                <h3 className="font-bold text-lg">Discord Oficial</h3>
-              </div>
-              <p className="text-gray-300 text-sm mb-3">
-                Entre no Discord para notícias, suporte e para encontrar outros jogadores!
-              </p>
-              <a 
-                href="https://discord.gg" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="text-primary hover:underline text-sm font-medium"
-              >
-                Entrar no Discord →
-              </a>
-            </div>
+            </motion.div>
           </div>
         </div>
+      </div>
+      
+      {/* Decoração de seta para baixo */}
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20">
+        <motion.div
+          animate={{ y: [0, 10, 0] }}
+          transition={{ repeat: Infinity, duration: 1.5 }}
+        >
+          <button className="text-white opacity-70 hover:opacity-100 transition-opacity">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+          </button>
+        </motion.div>
       </div>
     </section>
   );
