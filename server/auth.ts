@@ -30,11 +30,14 @@ if (!process.env.STEAM_API_KEY) {
 // Usando a URL do Replit como base, ou localhost se não estiver disponível
 const BASE_URL = process.env.REPLIT_SLUG 
   ? `https://${process.env.REPLIT_SLUG}.${process.env.REPLIT_OWNER}.repl.co`
-  : "http://localhost:3000";
+  : "http://localhost:5000";  // Porta 5000 conforme indicado nos logs
 
 const CALLBACK_URL = process.env.NODE_ENV === "production"
   ? "https://fishgg.com/api/auth/steam/return"  // URL de produção
   : `${BASE_URL}/api/auth/steam/return`; // URL para desenvolvimento
+
+console.log(`[CONFIG] BASE_URL configurada como: ${BASE_URL}`);
+console.log(`[CONFIG] CALLBACK_URL configurada como: ${CALLBACK_URL}`);
 
 export function setupAuth(app: Express) {
   if (!process.env.SESSION_SECRET) {
