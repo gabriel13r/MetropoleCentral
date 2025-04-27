@@ -32,8 +32,8 @@ export function TestLoginButton({ className = "" }: TestLoginButtonProps) {
 
   return (
     <Button
-      variant="outline"
-      className={`border-dashed border-2 flex items-center justify-center gap-2 ${className}`}
+      variant="secondary"
+      className={`border-dashed border-2 flex items-center justify-center gap-2 py-6 px-8 text-lg font-semibold bg-green-700/30 hover:bg-green-700/40 border-green-600 text-green-300 ${className}`}
       onClick={handleTestLogin}
     >
       <span>Login de Desenvolvimento</span>

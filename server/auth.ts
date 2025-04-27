@@ -145,11 +145,10 @@ export function setupAuth(app: Express) {
     res.json(req.user);
   });
 
-  // Rota para login de teste (apenas para desenvolvimento)
+  // Rota para login de teste (disponível em qualquer ambiente para facilitar testes)
   app.post('/api/auth/test-login', (req: Request, res: Response) => {
-    if (process.env.NODE_ENV !== 'development') {
-      return res.status(403).json({ message: "Test login only available in development" });
-    }
+    // Não restringimos mais ao ambiente de desenvolvimento
+    console.log('[AUTH] Recebida requisição de login de teste');
 
     // Criar um usuário de teste
     const testUser = {

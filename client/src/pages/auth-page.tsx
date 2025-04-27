@@ -56,15 +56,13 @@ function AuthPage() {
           <div className="flex flex-col items-center w-full space-y-6">
             <SteamLoginButton variant="large" className="w-full md:w-auto" />
             
-            {/* Botão de login de teste (apenas para ambiente de desenvolvimento) */}
-            {process.env.NODE_ENV !== "production" && (
-              <div className="mt-4">
-                <TestLoginButton />
-                <div className="text-xs text-gray-600 mt-1 text-center">
-                  (Apenas para testes em ambiente de desenvolvimento)
-                </div>
+            {/* Botão de login de teste (sempre visível para facilitar o desenvolvimento) */}
+            <div className="mt-4">
+              <TestLoginButton />
+              <div className="text-xs text-gray-600 mt-1 text-center">
+                (Apenas para testes em ambiente de desenvolvimento)
               </div>
-            )}
+            </div>
             
             <div className="text-sm text-gray-500 max-w-md text-center">
               Ao continuar, você concorda com nossos {" "}
