@@ -27,9 +27,14 @@ if (!process.env.STEAM_API_KEY) {
   console.error("STEAM_API_KEY is not set. Steam authentication will not work properly.");
 }
 
+// Usando a URL do Replit como base, ou localhost se não estiver disponível
+const BASE_URL = process.env.REPLIT_SLUG 
+  ? `https://${process.env.REPLIT_SLUG}.${process.env.REPLIT_OWNER}.repl.co`
+  : "http://localhost:3000";
+
 const CALLBACK_URL = process.env.NODE_ENV === "production"
   ? "https://fishgg.com/api/auth/steam/return"  // URL de produção
-  : "http://localhost:5000/api/auth/steam/return"; // URL local para desenvolvimento
+  : `${BASE_URL}/api/auth/steam/return`; // URL para desenvolvimento
 
 export function setupAuth(app: Express) {
   if (!process.env.SESSION_SECRET) {
@@ -102,21 +107,27 @@ export function setupAuth(app: Express) {
   }));
 
   // Rotas de autenticação Steam
-  app.get('/api/auth/steam', passport.authenticate('steam'));
+  app.get('/api/auth/steam', (req, res, next) => {
+    console.log(`[AUTH] Iniciando autenticação Steam, callback URL: ${CALLBACK_URL}`);
+    passport.authenticate('steam')(req, res, next);
+  });
 
   app.get('/api/auth/steam/return', 
     passport.authenticate('steam', { failureRedirect: '/auth?error=steam-auth-failed' }),
     (req: Request, res: Response) => {
       // Login bem-sucedido, redireciona para o dashboard
+      console.log(`[AUTH] Login Steam bem-sucedido, redirecionando para /dashboard. User: ${JSON.stringify(req.user)}`);
       res.redirect('/dashboard');
     }
   );
 
   // Rota para verificar usuário atual
   app.get('/api/user', (req: Request, res: Response) => {
+    console.log(`[AUTH] Checando usuário atual. isAuthenticated: ${req.isAuthenticated()}`);
     if (!req.isAuthenticated()) {
       return res.status(401).json({ message: "Not authenticated" });
     }
+    console.log(`[AUTH] Usuário autenticado: ${req.user?.username}`);
     res.json(req.user);
   });
 
