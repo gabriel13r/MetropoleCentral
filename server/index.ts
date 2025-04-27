@@ -62,12 +62,7 @@ app.use((req, res, next) => {
 
   // Em ambientes Replit, use a porta 5000
   // Em ambiente Windows local, use a porta 3001 (defina PORT=3001)
-  const port = process.env.PORT || 5000;
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
-    log(`serving on port ${port}`);
+  app.listen(5000, '127.0.0.1', () => {
+    console.log('Servidor rodando em http://127.0.0.1:5000');
   });
 })();
