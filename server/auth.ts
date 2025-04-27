@@ -2,14 +2,10 @@ import session from "express-session";
 import { Express, Request, Response, NextFunction } from "express";
 import crypto from "crypto";
 import passport from "passport";
-import { Strategy as SteamStrategy } from "passport-steam";
+import { Strategy as DiscordStrategy } from "passport-discord";
 import { User as UserType } from "@shared/schema";
 import { storage } from "./storage";
 
-// Injetando a API Key manualmente
-const STEAM_API_KEY = "613AB4531BB222FCD4ABCD7E44AC6B8F";
-
-// Adicionando tipo para session-express
 declare global {
   namespace Express {
     interface Session {
@@ -25,27 +21,22 @@ declare module "express-session" {
   }
 }
 
-// Usando a URL do Replit como base, ou localhost se não estiver disponível
 const BASE_URL = process.env.REPLIT_SLUG 
   ? `https://${process.env.REPLIT_SLUG}.${process.env.REPLIT_OWNER}.repl.co`
   : process.env.PORT 
-    ? `http://127.0.0.1:${process.env.PORT}` 
-    : "http://127.0.0.1:5000";
+    ? `http://0.0.0.0:${process.env.PORT}` 
+    : "http://0.0.0.0:5000";
 
 const CALLBACK_URL = process.env.NODE_ENV === "production"
-  ? "https://fishgg.com/api/auth/steam/return"  // URL de produção
-  : `${BASE_URL}/api/auth/steam/return`; // URL para desenvolvimento
-
-console.log(`[CONFIG] BASE_URL configurada como: ${BASE_URL}`);
-console.log(`[CONFIG] CALLBACK_URL configurada como: ${CALLBACK_URL}`);
+  ? "https://fishgg.com/api/auth/discord/callback"
+  : `${BASE_URL}/api/auth/discord/callback`;
 
 export function setupAuth(app: Express) {
   if (!process.env.SESSION_SECRET) {
-    // Gere um secret aleatório para desenvolvimento, mas em produção deve ser configurado
     process.env.SESSION_SECRET = crypto.randomBytes(32).toString("hex");
     console.warn("⚠️ Using randomly generated session secret. This is OK for development, but in production, configure SESSION_SECRET environment variable.");
   }
-  
+
   const sessionSettings: session.SessionOptions = {
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -53,7 +44,7 @@ export function setupAuth(app: Express) {
     store: storage.sessionStore,
     cookie: {
       secure: process.env.NODE_ENV === "production",
-      maxAge: 1000 * 60 * 60 * 24 * 7, // 1 semana
+      maxAge: 1000 * 60 * 60 * 24 * 7,
       sameSite: "lax"
     }
   };
@@ -63,7 +54,6 @@ export function setupAuth(app: Express) {
   app.use(passport.initialize());
   app.use(passport.session());
 
-  // Configuração do Passport
   passport.serializeUser((user: Express.User, done) => {
     done(null, user.id);
   });
@@ -77,34 +67,26 @@ export function setupAuth(app: Express) {
     }
   });
 
-  // Estratégia de autenticação Steam
-  const realm = BASE_URL; // Usando base_url completo como realm
-  
-  console.log(`[AUTH] Configurando Steam Strategy com:`);
-  console.log(`[AUTH] - returnURL: ${CALLBACK_URL}`);
-  console.log(`[AUTH] - realm: ${realm}`);
-  console.log(`[AUTH] - apiKey: ${STEAM_API_KEY ? "Configurada" : "NÃO CONFIGURADA"}`);
-  
-  passport.use(new SteamStrategy({
-    returnURL: CALLBACK_URL,
-    realm: realm,
-    apiKey: STEAM_API_KEY
-  }, async (identifier: string, profile: any, done: any) => {
+  passport.use(new DiscordStrategy({
+    clientID: process.env.DISCORD_CLIENT_ID!,
+    clientSecret: process.env.DISCORD_CLIENT_SECRET!,
+    callbackURL: CALLBACK_URL,
+    scope: ['identify', 'email']
+  }, async (accessToken: string, refreshToken: string, profile: any, done: any) => {
     try {
-      const steamId = profile.id;
-      let user = await storage.getUserBySteamId(steamId);
+      let user = await storage.getUserByDiscordId(profile.id);
 
       if (!user) {
         user = await storage.createUser({
-          username: profile.displayName,
-          steamId: steamId,
-          displayName: profile.displayName,
-          avatar: profile._json.avatarfull
+          username: profile.username,
+          discordId: profile.id,
+          displayName: profile.username,
+          avatar: `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png`
         });
       } else {
         user = await storage.updateUser(user.id, {
-          displayName: profile.displayName,
-          avatar: profile._json.avatarfull
+          displayName: profile.username,
+          avatar: `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png`
         }) as UserType;
       }
 
@@ -114,65 +96,22 @@ export function setupAuth(app: Express) {
     }
   }));
 
-  // Rotas de autenticação Steam
-  app.get('/api/auth/steam', (req, res, next) => {
-    console.log(`[AUTH] Iniciando autenticação Steam, callback URL: ${CALLBACK_URL}`);
-    passport.authenticate('steam')(req, res, next);
-  });
+  app.get('/api/auth/discord', passport.authenticate('discord'));
 
-  app.get('/api/auth/steam/return', 
-    passport.authenticate('steam', { failureRedirect: '/auth?error=steam-auth-failed' }),
+  app.get('/api/auth/discord/callback',
+    passport.authenticate('discord', { failureRedirect: '/auth?error=discord-auth-failed' }),
     (req: Request, res: Response) => {
-      console.log(`[AUTH] Login Steam bem-sucedido, redirecionando para /dashboard. User: ${JSON.stringify(req.user)}`);
       res.redirect('/dashboard');
     }
   );
 
-  // Rota para verificar usuário atual
   app.get('/api/user', (req: Request, res: Response) => {
-    console.log(`[AUTH] Checando usuário atual. isAuthenticated: ${req.isAuthenticated()}`);
     if (!req.isAuthenticated()) {
       return res.status(401).json({ message: "Not authenticated" });
     }
-    console.log(`[AUTH] Usuário autenticado: ${req.user?.username}`);
     res.json(req.user);
   });
 
-  // Rota para login de teste
-  app.post('/api/auth/test-login', (req: Request, res: Response) => {
-    console.log('[AUTH] Recebida requisição de login de teste');
-
-    const testUser = {
-      id: 999,
-      username: 'testuser',
-      displayName: 'Usuário de Teste',
-      role: 'user',
-      diamonds: 500,
-      isVip: true,
-      steamId: '76561198123456789',
-      hexId: null,
-      discordId: null,
-      email: null,
-      password: null,
-      vipExpiry: null,
-      stripeCustomerId: null,
-      stripeSubscriptionId: null,
-      avatar: 'https://avatars.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg',
-      joinedAt: new Date(),
-      lastLogin: new Date()
-    };
-
-    req.login(testUser, (err) => {
-      if (err) {
-        console.error('[AUTH] Erro no login de teste:', err);
-        return res.status(500).json({ message: "Erro no login de teste" });
-      }
-      console.log('[AUTH] Login de teste bem-sucedido');
-      res.status(200).json(testUser);
-    });
-  });
-
-  // Rota para logout
   app.post('/api/logout', (req: Request, res: Response, next: NextFunction) => {
     req.logout((err) => {
       if (err) return next(err);
