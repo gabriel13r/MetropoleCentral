@@ -7,10 +7,10 @@ async function throwIfResNotOk(res: Response) {
   }
 }
 
-// Ajustar URLs para apontar para a porta 5000 no desenvolvimento
+// Ajustar URLs para apontar para a porta 3001 no desenvolvimento
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
   ? '' 
-  : 'http://localhost:5000';
+  : 'http://localhost:3001';
 
 export async function apiRequest(
   method: string,
