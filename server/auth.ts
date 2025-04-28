@@ -1,4 +1,3 @@
-
 import session from "express-session";
 import { Express, Request, Response, NextFunction } from "express";
 import crypto from "crypto";
@@ -23,8 +22,12 @@ declare module "express-session" {
 }
 
 const BASE_URL = process.env.REPLIT_SLUG 
-  ? `https://${process.env.REPLIT_SLUG}.${process.env.REPLIT_OWNER}.repl.co`
-  : "http://0.0.0.0:5000";
+  ? `https://discord.com/oauth2/authorize?client_id=1366196340601917542&response_type=code&redirect_uri=http%3A%2F%2F127.0.0.1%3A5000%2Fapi%2Fauth%2Fdashboard&scope=identify`
+  : "http://127.0.0.1:5000";
+
+// Define as credenciais diretamente aqui
+const DISCORD_CLIENT_ID = "1366196340601917542";
+const DISCORD_CLIENT_SECRET = "aX55M6Sdt87cFvk4AQ9lWkf8wcXKk5Rz";
 
 export function setupAuth(app: Express) {
   if (!process.env.SESSION_SECRET) {
@@ -62,15 +65,11 @@ export function setupAuth(app: Express) {
     }
   });
 
-  if (!process.env.DISCORD_CLIENT_ID || !process.env.DISCORD_CLIENT_SECRET) {
-    console.warn("⚠️ Discord credentials não configuradas!");
-    return;
-  }
-
+  // Agora não precisa mais do IF de checagem
   passport.use(new DiscordStrategy({
-    clientID: process.env.DISCORD_CLIENT_ID,
-    clientSecret: process.env.DISCORD_CLIENT_SECRET,
-    callbackURL: `${BASE_URL}/api/auth/discord/callback`,
+    clientID: DISCORD_CLIENT_ID,
+    clientSecret: DISCORD_CLIENT_SECRET,
+    callbackURL: `${BASE_URL}/api/auth/dashboard`,
     scope: ['identify', 'email']
   }, async (accessToken: string, refreshToken: string, profile: any, done: any) => {
     try {
