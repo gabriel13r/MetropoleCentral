@@ -21,9 +21,7 @@ declare module "express-session" {
   }
 }
 
-const BASE_URL = process.env.REPLIT_SLUG 
-  ? `https://discord.com/oauth2/authorize?client_id=1366196340601917542&response_type=code&redirect_uri=http%3A%2F%2F127.0.0.1%3A5000%2Fapi%2Fauth%2Fdiscord%2Fcallback&scope=identify`
-  : "http://127.0.0.1:5000";
+const BASE_URL = "http://127.0.0.1:5000";
 
 // Define as credenciais diretamente aqui
 const DISCORD_CLIENT_ID = "1366196340601917542";
