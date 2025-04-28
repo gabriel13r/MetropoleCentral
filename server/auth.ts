@@ -69,7 +69,7 @@ export function setupAuth(app: Express) {
   passport.use(new DiscordStrategy({
     clientID: DISCORD_CLIENT_ID,
     clientSecret: DISCORD_CLIENT_SECRET,
-    callbackURL: `${BASE_URL}/api/auth/dashboard`,
+    callbackURL: `${BASE_URL}/api/auth/discord/callback`,
     scope: ['identify', 'email']
   }, async (accessToken: string, refreshToken: string, profile: any, done: any) => {
     try {
@@ -93,10 +93,10 @@ export function setupAuth(app: Express) {
   app.get('/api/auth/discord', passport.authenticate('discord'));
 
   app.get('/api/auth/discord/callback',
-    passport.authenticate('discord', { failureRedirect: '/auth?error=discord-auth-failed' }),
-    (req: Request, res: Response) => {
-      res.redirect('/dashboard');
-    }
+    passport.authenticate('discord', { 
+      failureRedirect: '/auth?error=discord-auth-failed',
+      successRedirect: '/dashboard'
+    })
   );
 
   app.get('/api/user', (req: Request, res: Response) => {
